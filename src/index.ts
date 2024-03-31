@@ -5,9 +5,9 @@ import { getPackageInfo } from "./cli/utils";
 process.on("SIGINT", () => process.exit(0));
 process.on("SIGTERM", () => process.exit(0));
 
-(async () => {
+const main = async () => {
   const packageInfo = getPackageInfo();
-  
+
   const program = new Command()
     .name("wrapper-component-library-cli")
     .description("Add components and their dependencies directly into your project as needed.")
@@ -18,4 +18,6 @@ process.on("SIGTERM", () => process.exit(0));
     );
 
   program.parse();
-})();
+};
+
+main();
