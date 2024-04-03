@@ -17,6 +17,8 @@ const main = async () => {
       "Display the version number."
     );
 
+  // - TODO: -> Implement and add to CLI add, init, remove, and diff commands.
+
   program.parse();
 };
 

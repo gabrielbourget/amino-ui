@@ -67,7 +67,7 @@ export const components: TRegistry = [
   },
   {
     name: "circular-progress",
-    dependencies: ["react-aria-components"],
+    dependencies: ["framer-motion", "react-aria-components"],
     directories: ["components/CircularProgress"],
   },
   {
@@ -77,7 +77,7 @@ export const components: TRegistry = [
   },
   {
     name: "combo-box",
-    dependencies: ["react-aria-components"],
+    dependencies: ["framer-motion", "react-aria-components"],
     registryDependencies: ["button", "input"],
     directories: ["components/ComboBox"],
   },
@@ -138,7 +138,7 @@ export const components: TRegistry = [
   },
   {
     name: "linear-progress",
-    dependencies: ["react-aria-components"],
+    dependencies: ["framer-motion", "react-aria-components"],
     directories: ["components/LinearProgress"],
   },
   {
@@ -209,7 +209,7 @@ export const components: TRegistry = [
   // },
   {
     name: "select",
-    dependencies: ["react-aria-components"],
+    dependencies: ["framer-motion", "react-aria-components"],
     registryDependencies: ["button"],
     directories: ["components/Select"],
   },
