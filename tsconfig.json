@@ -18,7 +18,7 @@
     "types": [
       "bun-types" // add Bun global
     ],
-    "rootDir": "src",
+    "rootDir": "packages/CLI/src",
     "outDir": "dist",
     "sourceMap": true,
     "esModuleInterop": true,

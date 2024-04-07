@@ -1,0 +1,42 @@
+{
+  "name": "resource-distribution-cli",
+  "description": "Distribute centralized resources into your codebase in a modular fashion.",
+  "module": "index.ts",
+  "type": "module",
+  "exports": "./bin/index.js",
+  "bin": "./bin/index.js",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsup",
+    "start": "bun dist/index.js",
+    "dev": "cross-env COMPONENTS_REGISTRY_URL=http://localhost:3001 nodemon src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "cosmiconfig": "^9.0.0",
+    "cross-env": "^7.0.3",
+    "diff": "^5.2.0",
+    "figlet": "^1.7.0",
+    "fs-extra": "^11.2.0",
+    "ora": "^8.0.1",
+    "path": "^0.12.7",
+    "prompts": "^2.4.2",
+    "ts-node": "^10.9.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.12.2",
+    "@types/prompts": "^2.4.9",
+    "bun-types": "latest",
+    "tsup": "^8.0.2",
+    "type-fest": "^4.14.0",
+    "typescript": "^5.4.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

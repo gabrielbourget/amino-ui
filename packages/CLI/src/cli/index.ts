@@ -1,6 +1,6 @@
 import { Command } from "commander";
 // import figlet from "figlet";
-import { getPackageInfo } from "./cli/utils";
+import { getPackageInfo } from "./utils";
 
 process.on("SIGINT", () => process.exit(0));
 process.on("SIGTERM", () => process.exit(0));
