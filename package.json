@@ -12,6 +12,21 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build"
-  }
+    "build": "turbo run build",
+    "build:cli": "turbo --filter=resource-distribution-cli build",
+    "build:registry": "npm --filter=web build:registry",
+    "dev": "turbo run dev --parallel",
+    "dev:cli": "turbo --filter=resource-distribution-cli dev",
+    "start:cli": "npm --filter=resource-distribution-cli start:dev",
+    "dev:web": "npm --filter=web dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "preview": "turbo run preview",
+    "typecheck": "turbo run typecheck",
+    "format:write": "turbo run format:write",
+    "format:check": "turbo run format:check",
+    "check": "turbo lint typecheck format:check",
+    "test": "turbo run test --force"
+  },
+  "packageManager": "npm@10.5.1"
 }
