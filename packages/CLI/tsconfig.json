@@ -15,7 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "rootDir": "packages/CLI/src",
+    "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,
     "esModuleInterop": true,

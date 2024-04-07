@@ -4,12 +4,9 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "author": {
-    "name": "gabrielbourget"
-  },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/web",
+    "packages/CLI"
   ],
   "scripts": {
     "build": "turbo run build",
@@ -27,7 +24,6 @@
     "format:check": "turbo run format:check",
     "check": "turbo lint typecheck format:check",
     "test": "turbo run test --force",
-    "prepare": "husky install",
     "precommit": "lint-staged"
   },
   "packageManager": "npm@10.5.1",
