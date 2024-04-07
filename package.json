@@ -26,7 +26,25 @@
     "format:write": "turbo run format:write",
     "format:check": "turbo run format:check",
     "check": "turbo lint typecheck format:check",
-    "test": "turbo run test --force"
+    "test": "turbo run test --force",
+    "prepare": "husky install",
+    "precommit": "lint-staged"
   },
-  "packageManager": "npm@10.5.1"
+  "packageManager": "npm@10.5.1",
+  "dependencies": {
+    "@babel/core": "^7.24.4",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "stylelint": "^16.3.1",
+    "tsx": "^4.7.2",
+    "turbo": "^1.13.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.5",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.24",
+    "typescript": "^5.4.4"
+  }
 }
