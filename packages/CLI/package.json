@@ -7,10 +7,11 @@
   "bin": "./bin/index.js",
   "version": "0.0.1",
   "scripts": {
+    "dev": "tsup --watch",
     "build": "tsup",
-    "start": "bun dist/index.js",
-    "dev": "cross-env COMPONENTS_REGISTRY_URL=http://localhost:3001 nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "cross-env COMPONENTS_REGISTRY_URL=http://localhost:3001 node dist/index.js",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no tests specified\" && exit 1"
   },
   "dependencies": {
     "chalk": "^5.3.0",
