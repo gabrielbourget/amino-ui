@@ -1,5 +1,6 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { type TRegistryIndex, type TRegistryIndexItem, registryIndexSchema } from "@/src/utils/registry/schema";
+import { TConfig } from "@/src/utils/config/schema";
 
 const { COMPONENT_REGISTRY_URL, HTTPS_PROXY } = process.env;
 
@@ -17,16 +18,10 @@ export const getRegistryIndex = async (): Promise<TRegistryIndexItem[]> => {
   }
 };
 
-// - TODO: -> Replace this placeholder type once config features are implemented.
-export type TTempConfig = any;
-
-export const getItemTargetPath = async (config: TTempConfig, pathOverride?: string) => {
+export const getItemTargetPath = async (config: TConfig, pathOverride?: string) => {
   if (pathOverride) return pathOverride;
 
-  // - TODO: -> Conditional logic to check for a global path override coming from config.
-
-  // - TODO: -> Check to see if this is sufficient or if an absolute path will be needed.
-  return "components";
+  return config.resolvedPaths["components"];
 };
 
 export const fetchRegistry = async (paths: string[]) => {

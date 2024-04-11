@@ -11,14 +11,13 @@ const { detect: detectPackageManager } = require("detect-package-manager");
 // import { detect as detectPackageManager } from "detect-package-manager";
 
 import { logger, handleError } from "@/src/utils";
-import {
-  type TTempConfig, fetchTree, getItemTargetPath, getRegistryIndex, resolveTree
-} from "@/src/utils/registry";
+import { fetchTree, getItemTargetPath, getRegistryIndex, resolveTree } from "@/src/utils/registry";
 import { TRegistryIndexItem, TRegistryIndexItemFile, registryIndexItemSchema } from "@/src/utils/registry/schema";
 import { kebabToPascalCase } from "@/src/utils/stringUtils";
 import {
   computePackageManagerAddCommand, computePackageManagerDevDependencyFlag
-} from "../utils/packageManagerHelpers";
+} from "@/src/utils/packageManagerHelpers";
+import { getConfig } from "@/src/utils/config";
 
 const addOptionsSchema = z.object({
   components: z.array(z.string()).optional(),
@@ -52,14 +51,14 @@ export const add = new Command()
         logger.error(`The path ${cwd} could not be found. Please try again.`);
         process.exit(1);
       }
-      
-      // const config = await getConfig(cwd);
-      // if (!config) {
-      //   logger.warn(
-      //     `No existing configuration found. Please run the ${chalk.green(`init`)} command to generate a components.json file.`
-      //   );
-      //   process.exit(1);
-      // }
+
+      const config = await getConfig(cwd);
+      if (!config) {
+        logger.warn(
+          `No existing configuration found. Please run the ${chalk.green(`init`)} command to generate a components.json file.`
+        );
+        process.exit(1);
+      }
 
       const registryIndex = await getRegistryIndex();
 
@@ -112,9 +111,6 @@ export const add = new Command()
 
       const spinner = ora(`Installing selected components...`).start();
 
-      const config: TTempConfig = {};
-      
-      // TODO: -> Remove :any type when fetchTree is implemented
       resolvedPayload.forEach(async (item: any) => {
         spinner.text = `Installing ${item.name}...`;
 
@@ -143,7 +139,7 @@ export const add = new Command()
               logger.info(
                 `Skipped ${item.name}. To overwrite its content, run the command with the ${chalk.green("--overwrite")} flag.`
               );
-    
+
               return;
             }
 

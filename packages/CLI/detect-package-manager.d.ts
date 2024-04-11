@@ -1,1 +1,0 @@
-/// declare detect-package-manager
