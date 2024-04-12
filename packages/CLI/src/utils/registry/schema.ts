@@ -13,10 +13,10 @@ export const registryIndexItemSchema = z.object({
   devDependencies: z.array(z.string()).optional(),
   registryDependencies: z.array(z.string()).optional(),
   directory: z.array(z.string()),
-  files: z.object({
+  files: z.array(z.object({
     name: z.string(),
     content: z.string()
-  })
+  }))
 });
 
 export type TRegistryIndexItem = z.infer<typeof registryIndexItemSchema>;
