@@ -8,179 +8,179 @@ export const components: TRegistry = [
   //   name: "accordion",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/Accordion"],
+  //   directory: "Accordion",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "action-sheet",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/ActionSheet"],
+  //   directory: "ActionSheet",
   // },
   {
     name: "alert-dialog",
     dependencies: ["react-aria-components"],
     registryDependencies: ["text", "button"],
-    directories: ["components/AlertDialog"],
+    directory: "AlertDialog",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "audio-player",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/AudioPlayer"],
+  //   directory: "AudioPlayer",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "avatar",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/Avatar"],
+  //   directory: "Avatar",
   // },
   {
     name: "button",
     dependencies: ["react-aria-components"],
-    directories: ["components/Button"],
+    directory: "Button",
   },
   {
     name: "breadcrumbs",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button", "click-popover", "link", "listbox-item", "text"],
-    directories: ["components/Breadcrumbs"],
+    directory: "Breadcrumbs",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "carousel",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/Carousel"],
+  //   directory: "Carousel",
   // },
   {
     name: "checkbox",
     dependencies: ["react-aria-components"],
-    directories: ["components/Checkbox"],
+    directory: "Checkbox",
   },
   {
     name: "checkbox-group",
     dependencies: ["react-aria-components"],
-    directories: ["components/CheckboxGroup"],
+    directory: "CheckboxGroup",
   },
   {
     name: "circular-progress",
     dependencies: ["framer-motion", "react-aria-components"],
-    directories: ["components/CircularProgress"],
+    directory: "CircularProgress",
   },
   {
     name: "click-popover",
     dependencies: ["react-aria-components"],
-    directories: ["components/ClickPopover"],
+    directory: "ClickPopover",
   },
   {
     name: "combo-box",
     dependencies: ["framer-motion", "react-aria-components"],
     registryDependencies: ["button", "input"],
-    directories: ["components/ComboBox"],
+    directory: "ComboBox",
   },
   {
     name: "counter",
     dependencies: ["react-aria-components"],
     registryDependencies: ["circular-progress", "text"],
-    directories: ["components/Counter"],
+    directory: "Counter",
   },
   // - TODO: -> Decide how to place common calendar styles
   {
     name: "datetime-picker",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button"],
-    directories: ["components/DateTimePicker"],
+    directory: "DateTimePicker",
   },
   // - TODO: -> Decide how to place common calendar styles
   {
     name: "datetime-range-picker",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button"],
-    directories: ["components/DateTimeRangePicker"],
+    directory: "DateTimeRangePicker",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "drawer",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/Drawer"],
+  //   directory: "Drawer",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "file-upload-surface",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/FileUploadSurface"],
+  //   directory: "FileUploadSurface",
   // },
   {
     name: "form-field",
     dependencies: ["react-aria-components"],
     registryDependencies: ["text"],
-    directories: ["components/FormField"],
+    directory: "FormField",
   },
   {
     name: "hover-popover",
     dependencies: ["react-aria-components"],
-    directories: ["components/"],
+    directory: "HoverPopover",
   },
   {
     name: "input",
     dependencies: ["react-aria-components"],
-    directories: ["components/Input"],
+    directory: "Input",
   },
   {
     name: "line-segment",
     dependencies: ["react-aria-components"],
-    directories: ["components/LineSegment"],
+    directory: "LineSegment",
   },
   {
     name: "linear-progress",
     dependencies: ["framer-motion", "react-aria-components"],
-    directories: ["components/LinearProgress"],
+    directory: "LinearProgress",
   },
   {
     name: "link",
     dependencies: ["next/link", "react"],
-    directories: ["components/Link"],
+    directory: "Link",
   },
   {
     name: "listbox-item",
     dependencies: ["react-aria-components"],
-    directories: ["components/ListBoxItem"],
+    directory: "ListBoxItem",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "map",
   //   dependencies: ["react"],
   //   registryDependencies: [],
-  //   directories: ["components/Map"],
+  //   directory: "Map",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "masonry-gallery",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/MasonryGallery"],
+  //   directory: "MasonryGallery",
   // },
   {
     name: "meter",
     dependencies: ["react-aria-components"],
-    directories: ["components/Meter"],
+    directory: "Meter",
   },
   {
     name: "modal",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button", "text"],
-    directories: ["components/Modal"],
+    directory: "Modal",
   },
   {
     name: "number-input",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button", "input"],
-    directories: ["components/NumberInput"],
+    directory: "NumberInput",
   },
   {
     name: "pagination",
@@ -188,122 +188,122 @@ export const components: TRegistry = [
     registryDependencies: [
       "button", "click-popover","counter", "line-segment", "listbox-item", "form-field", "number-input", "select", "text"
     ],
-    directories: ["components/Pagination"],
+    directory: "Pagination",
   },
   {
     name: "radio",
     dependencies: ["react-aria-components"],
-    directories: ["components/Radio"],
+    directory: "Radio",
   },
   {
     name: "radio-group",
     dependencies: ["react-aria-components"],
-    directories: ["components/RadioGroup"],
+    directory: "RadioGroup",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "search-bar",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/SearchBar"],
+  //   directory: "SearchBar",
   // },
   {
     name: "select",
     dependencies: ["framer-motion", "react-aria-components"],
     registryDependencies: ["button"],
-    directories: ["components/Select"],
+    directory: "Select",
   },
   {
     name: "slider",
     dependencies: ["react-aria-components"],
     registryDependencies: ["text"],
-    directories: ["components/Slider"],
+    directory: "Slider",
   },
   {
     name: "stepper",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button", "input"],
-    directories: ["components/Stepper"],
+    directory: "Stepper",
   },
   {
     name: "switch",
     dependencies: ["react-aria-components"],
-    directories: ["components/Switch"],
+    directory: "Switch",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "table",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/Table"],
+  //   directory: "Table",
   // },
   {
     name: "tag",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button"],
-    directories: ["components/Tag"],
+    directory: "Tag",
   },
   {
     name: "tag-combo-box",
     dependencies: ["react-aria-components"],
     registryDependencies: ["combo-box", "tag-group", "tag"],
-    directories: ["components/TagComboBox"],
+    directory: "TagComboBox",
   },
   {
     name: "tag-group",
     dependencies: ["react-aria-components"],
-    directories: ["components/TagGroup"],
+    directory: "TagGroup",
   },
   {
     name: "text",
     dependencies: ["react-aria-components"],
-    directories: ["components/Text"],
+    directory: "Text",
   },
   {
     name: "textarea",
     dependencies: ["react-aria-components"],
-    directories: ["components/"],
+    directory: "TextArea",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "thumbnail-row",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/ThumbnailRow"],
+  //   directory: "ThumbnailRow",
   // },
   {
     name: "time-picker",
     dependencies: ["react-aria-components"],
-    directories: ["components/TimePicker"],
+    directory: "TimePicker",
   },
   {
     name: "toaster",
     dependencies: ["react-aria-components"],
     registryDependencies: ["button", "text"],
-    directories: ["components/Toaster"],
+    directory: "Toaster",
   },
   {
     name: "tooltip",
     dependencies: ["react-aria-components"],
-    directories: ["components/"],
+    directory: "",
   },
   {
     name: "toggle-button",
     dependencies: ["react-aria-components"],
-    directories: ["components/ToggleButton"],
+    directory: "ToggleButton",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "tree",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/Tree"],
+  //   directory: "Tree"
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "video-player",
   //   dependencies: ["react-aria-components"],
   //   registryDependencies: [],
-  //   directories: ["components/VideoPlayer"],
+  //   directory: "VideoPlayer",
   // },
 ];

@@ -5,7 +5,7 @@ export const registryEntrySchema = z.object({
   dependencies: z.array(z.string()).optional(),
   devDependencies: z.array(z.string()).optional(),
   registryDependencies: z.array(z.string()).optional(),
-  directories: z.array(z.string()),
+  directory: z.string(),
 });
 
 export const registrySchema = z.array(registryEntrySchema);
