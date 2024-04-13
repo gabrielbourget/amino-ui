@@ -3,7 +3,7 @@ import { DEFAULT_COMPONENTS_PATH } from ".";
 
 export const coreConfigSchema = z.object({
   $schema: z.string().optional(),
-  rsc: z.coerce.boolean().default(false),
+  nextjs: z.coerce.boolean().default(false),
   tsx: z.coerce.boolean().default(true),
   aliases: z.object({
     components: z.string(),
