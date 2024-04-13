@@ -21,6 +21,6 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "paths": { "@/*": ["./*"]}
+    "paths": { "@/*": ["./*"] }
   }
 }

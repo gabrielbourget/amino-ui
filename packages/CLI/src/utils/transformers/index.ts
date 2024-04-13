@@ -6,7 +6,6 @@ import { transformImports } from "@/src/utils/transformers/transformImports";
 import { transformToJSX } from "@/src/utils/transformers/transformToJSX";
 import { transformNextJS } from "@/src/utils/transformers/transformNextJS";
 import { Project, ScriptKind, type SourceFile } from "ts-morph";
-import { z } from "zod";
 
 export type TTransformOptions = {
   filename: string;

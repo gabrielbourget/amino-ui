@@ -5,11 +5,12 @@ import { resolveImport } from "@/src/utils/resolveImport";
 import { type TConfig, coreConfigSchema, type TCoreConfig, configSchema } from "@/src/utils/config/schema";
 
 export const DEFAULT_COMPONENTS_PATH = "@/components";
-export const DEFAULT_UTILS_PATH = "/src/utils";
-export const DEFAULT_TYPES_PATH = "/src/types";
-export const DEFAULT_CONSTANTS_PATH = "/src/constants";
-// -> Merge globals.css, variables.css, and utils.css into one css file.
-export const DEFAULT_GLOBAL_CSS_PATH = "/src";
+export const DEFAULT_UTILS_PATH = "@/utils";
+export const DEFAULT_TYPES_PATH = "@/types";
+export const DEFAULT_CONSTANTS_PATH = "@/constants";
+export const DEFAULT_ICONS_PATH = "@/icons";
+// - TODO: -> Merge globals.css, variables.css, and utils.css into one css file.
+export const DEFAULT_GLOBAL_CSS_PATH = "@/";
 
 export const getConfig = async (cwd: string) => {
   const config = await getCoreConfig(cwd);

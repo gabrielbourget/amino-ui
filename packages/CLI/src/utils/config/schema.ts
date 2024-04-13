@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { DEFAULT_COMPONENTS_PATH } from ".";
 
 export const coreConfigSchema = z.object({
   $schema: z.string().optional(),
@@ -10,6 +9,7 @@ export const coreConfigSchema = z.object({
     utils: z.string(),
     types: z.string(),
     constants: z.string(),
+    icons: z.string(),
     globalStyles: z.string(),
   }),
 }).strict();
@@ -22,6 +22,7 @@ export const configSchema = coreConfigSchema.extend({
     utils: z.string(),
     types: z.string(),
     constants: z.string(),
+    icons: z.string(),
     globalStyles: z.string(),
   })
 });
