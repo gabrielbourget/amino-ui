@@ -10,7 +10,7 @@ export const DEFAULT_TYPES_PATH = "@/types";
 export const DEFAULT_CONSTANTS_PATH = "@/constants";
 export const DEFAULT_ICONS_PATH = "@/icons";
 // - TODO: -> Merge globals.css, variables.css, and utils.css into one css file.
-export const DEFAULT_GLOBAL_CSS_PATH = "@/";
+export const DEFAULT_CSS_PATH = "@/";
 
 export const getConfig = async (cwd: string) => {
   const config = await getCoreConfig(cwd);
@@ -36,7 +36,7 @@ export const resolveConfigPaths = async (cwd: string, config: TCoreConfig): Prom
       utils: await resolveImport(config.aliases["utils"], tsConfig),
       types: await resolveImport(config.aliases["types"], tsConfig),
       constants: await resolveImport(config.aliases["constants"], tsConfig),
-      globalStyles: await resolveImport(config.aliases["globalStyles"], tsConfig),
+      globalCSS: await resolveImport(config.aliases["globalCSS"], tsConfig),
     }
   });
 };

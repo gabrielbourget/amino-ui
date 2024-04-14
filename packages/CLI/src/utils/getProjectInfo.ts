@@ -3,12 +3,9 @@ import fs, { pathExists } from "fs-extra";
 import fg from "fast-glob";
 import path from "path";
 import { loadConfig } from "tsconfig-paths";
-import { z } from "zod";
 
-import { handleError } from "@/src/utils/handleError";
-import { logger } from "@/src/utils/logger";
-import { getConfig, resolveConfigPaths } from "@/src/utils/config";
-import type { TConfig, TCoreConfig } from "@/src/utils/config/schema";
+import { DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_CSS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig, resolveConfigPaths } from "@/src/utils/config";
+import type { TCoreConfig, TConfig } from "./config/schema";
 
 export const PROJECT_TYPE__NEXT_APP_SRC = "next-app-src";
 export const PROJECT_TYPE__NEXT_APP = "next-app";
@@ -24,7 +21,8 @@ export type TSupportedProjectTypes = typeof SUPPORTED_PROJECT_TYPES[number];
 
 const SHARED_IGNORE = [
   "**/node_modules/**", ".next", "dist", "build", "public", "coverage",
-  "tests", "test", "spec", "specs", "mocks", "mock", ".husky",
+  "tests", "test", "spec", "specs", "mocks", "mock", ".husky", "cypress",
+  ".vscode", ".git", "ci"
 ];
 
 export const getProjectInfo = async () => {
@@ -49,6 +47,38 @@ export const getProjectInfo = async () => {
   } catch (error) {
     return projectInfo;
   }
+};
+
+export const getProjectConfig = async (cwd: string): Promise<TConfig | null> => {
+  const existingConfig = await getConfig(cwd);
+
+  if (existingConfig) return existingConfig;
+
+  const projectType = await getProjectType(cwd);
+  const tsConfigAliasPrefix = await getTsConfigAliasPrefix(cwd);
+
+  // - TODO: -> Check to see if this could block off looking for import aliases in a jsconfig.json file.
+  // - TODO: -> Find alternative to needing user to have set up an alias prefix.
+  if (!projectType || !tsConfigAliasPrefix) return null;
+
+  const isTypescriptProject = await isTypeScriptProject(cwd);
+
+  const defaultCoreConfig: TCoreConfig = {
+    // - TODO: -> Replace with actual deployment link once dpeloyed.
+    $schema: "https://wrapper-component-library.com/schema.json",
+    rsc: [PROJECT_TYPE__NEXT_APP_SRC, PROJECT_TYPE__NEXT_APP].includes(projectType),
+    tsx: isTypescriptProject,
+    aliases: {
+      components: `${tsConfigAliasPrefix}/${DEFAULT_COMPONENTS_PATH}`,
+      utils: `${tsConfigAliasPrefix}/${DEFAULT_UTILS_PATH}`,
+      types: `${tsConfigAliasPrefix}/${DEFAULT_TYPES_PATH}`,
+      constants: `${tsConfigAliasPrefix}/${DEFAULT_CONSTANTS_PATH}`,
+      icons: `${tsConfigAliasPrefix}/${DEFAULT_ICONS_PATH}`,
+      globalCSS: `${tsConfigAliasPrefix}/${DEFAULT_CSS_PATH}`,
+    }
+  };
+
+  return resolveConfigPaths(cwd, defaultCoreConfig);
 };
 
 export const getTsConfig = async () => {
