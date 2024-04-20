@@ -3,6 +3,9 @@ export const ROUNDED = "rounded";
 export const ROUND = "round";
 
 export const AVAILABLE_CORNER_GEOMETRIES = [ORTHOGONAL, ROUNDED, ROUND];
+
+export const VERTICAL = "vertical";
+export const HORIZONTAL = "horizontal";
 `;
 
 export const ui = `export const VIEWBOX_CENTER_X = 50;

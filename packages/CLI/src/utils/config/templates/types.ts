@@ -23,6 +23,11 @@ export const ui = `import { AVAILABLE_STROKE_LINECAPS, AVAILABLE_POPOVER_PLACEME
 export type TAvailablePopoverPlacementPositions = typeof AVAILABLE_POPOVER_PLACEMENT_POSITIONS[number];
 
 export type TAvailableStrokeLinecaps = typeof AVAILABLE_STROKE_LINECAPS[number];
+
+export type TIconProps = {
+  size?: number;
+  color?: string;
+}
 `;
 
 export const utils = `export type TIntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;

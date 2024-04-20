@@ -1,14 +1,15 @@
-import type { TRegistry } from "./schema";
+import type { TComponentRegistry } from "./schema";
 
 const baseDependencies = ["react", "react-dom", "classnames"];
 
-export const components: TRegistry = [
+export const components: TComponentRegistry = [
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
   //   name: "accordion",
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Accordion",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -17,13 +18,18 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "ActionSheet",
   // },
   {
     name: "alert-dialog",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["text", "button"],
+    componentRegistryDependencies: [
+      "text", "button", "garbage-bin-icon", "checkmark-icon", "info-icon", "octagon-frame-exclamation-icon",
+      "triangle-frame-exclamation-icon", "x-icon"
+    ],
+    helperRegistryDependencies: [""],
     directory: "AlertDialog",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -32,6 +38,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "AudioPlayer",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -40,6 +47,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Avatar",
   // },
   {
@@ -58,7 +66,7 @@ export const components: TRegistry = [
   {
     name: "calendar-icon",
     isIcon: true,
-    directory: "CalendarIcon",
+    file: "CalendarIcon.tsx",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
@@ -66,6 +74,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Carousel",
   // },
   {
@@ -83,33 +92,38 @@ export const components: TRegistry = [
   {
     name: "checkmark-icon",
     isIcon: true,
-    directory: "CheckmarkIcon",
+    file: "CheckmarkIcon.tsx",
   },
   {
     name: "chevron-down-icon",
     isIcon: true,
-    directory: "ChevronDownIcon",
+    file: "ChevronDownIcon.tsx",
   },
   {
     name: "chevron-left-icon",
     isIcon: true,
-    directory: "ChevronLeftIcon",
+    file: "ChevronLeftIcon.tsx",
   },
   {
     name: "chevron-right-icon",
     isIcon: true,
-    directory: "ChevronRightIcon",
+    file: "ChevronRightIcon.tsx",
   },
   {
     name: "chevron-up-icon",
     isIcon: true,
-    directory: "ChevronUpIcon",
+    file: "ChevronUpIcon.tsx",
   },
   {
     name: "circular-progress",
     isIcon: false,
     dependencies: ["framer-motion", "react-aria-components"],
     directory: "CircularProgress",
+  },
+  {
+    name: "circle-frame-info-icon",
+    isIcon: true,
+    file: "CircleFrameInfoIcon.tsx",
   },
   {
     name: "click-popover",
@@ -120,7 +134,7 @@ export const components: TRegistry = [
   {
     name: "clock-icon",
     isIcon: true,
-    directory: "ClockIcon",
+    file: "ClockIcon.tsx",
   },
   {
     name: "combo-box",
@@ -132,7 +146,7 @@ export const components: TRegistry = [
   {
     name: "context-menu-horizontal-icon",
     isIcon: true,
-    directory: "ContextMenuHorizontalIcon",
+    file: "ContextMenuHorizontalIcon.tsx",
   },
   {
     name: "counter",
@@ -160,12 +174,12 @@ export const components: TRegistry = [
   {
     name: "double-chevron-left-icon",
     isIcon: true,
-    directory: "DoubleChevronLeftIcon",
+    file: "DoubleChevronLeftIcon.tsx",
   },
   {
     name: "double-chevron-right-icon",
     isIcon: true,
-    directory: "DoubleChevronRightIcon",
+    file: "DoubleChevronRightIcon.tsx",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
@@ -173,6 +187,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Drawer",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -181,6 +196,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "FileUploadSurface",
   // },
   {
@@ -193,7 +209,7 @@ export const components: TRegistry = [
   {
     name: "gargage-bin-icon",
     isIcon: true,
-    directory: "GarbageBinIcon",
+    file: "GarbageBinIcon.tsx",
   },
   {
     name: "hover-popover",
@@ -204,7 +220,7 @@ export const components: TRegistry = [
   {
     name: "info-icon",
     isIcon: true,
-    directory: "InfoIcon",
+    file: "InfoIcon.tsx",
   },
   {
     name: "input",
@@ -242,6 +258,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Map",
   // },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -250,6 +267,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "MasonryGallery",
   // },
   {
@@ -261,7 +279,7 @@ export const components: TRegistry = [
   {
     name: "minus-icon",
     isIcon: true,
-    directory: "MinusIcon",
+    file: "MinusIcon.tsx",
   },
   {
     name: "modal",
@@ -280,7 +298,7 @@ export const components: TRegistry = [
   {
     name: "octagon-frame-exclamation-icon",
     isIcon: true,
-    directory: "OctagonFrameExclamationIcon",
+    file: "OctagonFrameExclamationIcon.tsx",
   },
   {
     name: "pagination",
@@ -295,7 +313,7 @@ export const components: TRegistry = [
   {
     name: "plus-icon",
     isIcon: true,
-    directory: "PlusIcon",
+    file: "PlusIcon.tsx",
   },
   {
     name: "radio",
@@ -315,6 +333,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "SearchBar",
   // },
   {
@@ -350,6 +369,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Table",
   // },
   {
@@ -390,6 +410,7 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "ThumbnailRow",
   // },
   {
@@ -423,12 +444,13 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "Tree"
   // },
   {
     name: "triangle-frame-exclamation-icon",
     isIcon: true,
-    directory: "TriangleFrameExclamationIcon",
+    file: "TriangleFrameExclamationIcon.tsx",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
@@ -436,11 +458,12 @@ export const components: TRegistry = [
   //   isIcon: false,
   //   dependencies: ["react-aria-components"],
   //   componentRegistryDependencies: [],
+  //   helperRegistryDependencies: [""],
   //   directory: "VideoPlayer",
   // },
   {
     name: "x-icon",
     isIcon: true,
-    directory: "XIcon",
+    file: "XIcon.tsx",
   },
 ];

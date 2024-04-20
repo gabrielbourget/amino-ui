@@ -1,18 +1,12 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
   type TComponentRegistryIndex, type TComponentRegistryIndexItem, componentRegistryIndexSchema,
-  helpersRegistryIndexItemSchema, helpersRegistryIndexSchema, THelpersRegistryIndex,
-  THelpersRegistryIndexItem,
-  REGISTRY_TYPE__COMPONENTS,
-  TAvailableRegistryItemTypes,
-  REGISTRY_ITEM_TYPE__COMPONENT,
-  REGISTRY_ITEM_TYPE__UTIL,
-  REGISTRY_ITEM_TYPE__TYPE, helpersRegistryIndexItemKeymap, 
-  REGISTRY_ITEM_TYPE__GLOBAL_CSS,
-  REGISTRY_ITEM_TYPE__TEXT_CSS,
-  TAvailableRegistryTypes,
-  REGISTRY_TYPE__HELPERS,
-  REGISTRY_ITEM_TYPE__ICON
+  helperRegistryIndexItemSchema, helperRegistryIndexSchema, THelpersRegistryIndex, THelperRegistryIndexItem,
+  REGISTRY_TYPE__COMPONENTS, TAvailableRegistryItemTypes, REGISTRY_ITEM_TYPE__COMPONENT,
+  REGISTRY_ITEM_TYPE__UTIL, REGISTRY_ITEM_TYPE__TYPE, helpersRegistryIndexItemKeymap, REGISTRY_ITEM_TYPE__ICON,
+  REGISTRY_ITEM_TYPE__GLOBAL_CSS, REGISTRY_ITEM_TYPE__TEXT_CSS, TAvailableRegistryTypes, REGISTRY_TYPE__HELPERS,
+  REGISTRY_ITEM_TYPE__CONSTANT,
+  
 } from "@/src/utils/registry/schema";
 import { TConfig } from "@/src/utils/config/schema";
 
@@ -33,7 +27,7 @@ export const getRegistryIndex = async (
     }
     else if (registryType === REGISTRY_TYPE__HELPERS) {
       const [result] = await fetchRegistry(["helpers/index.json"], { registryType: REGISTRY_TYPE__HELPERS });
-      registryIndex = helpersRegistryIndexSchema.parse(result);
+      registryIndex = helperRegistryIndexSchema.parse(result);
     }
 
     return registryIndex;
@@ -50,6 +44,7 @@ export const getItemTargetPath = async (
   switch (itemType) {
     case REGISTRY_ITEM_TYPE__COMPONENT: return config.resolvedPaths[REGISTRY_ITEM_TYPE__COMPONENT];
     case REGISTRY_ITEM_TYPE__ICON: return config.resolvedPaths[REGISTRY_ITEM_TYPE__ICON];
+    case REGISTRY_ITEM_TYPE__CONSTANT: return config.resolvedPaths[REGISTRY_ITEM_TYPE__CONSTANT];
     case REGISTRY_ITEM_TYPE__UTIL: return config.resolvedPaths[REGISTRY_ITEM_TYPE__UTIL];
     case REGISTRY_ITEM_TYPE__TYPE: return config.resolvedPaths[REGISTRY_ITEM_TYPE__TYPE];
     case REGISTRY_ITEM_TYPE__GLOBAL_CSS: return config.resolvedPaths[REGISTRY_ITEM_TYPE__GLOBAL_CSS];
@@ -115,7 +110,7 @@ export const resolveHelperTree = async (
   const tree: THelpersRegistryIndex = [];
 
   for (const item of itemsToResolve) {
-    const entry = index.find((entry: THelpersRegistryIndexItem) => entry.name === item);
+    const entry = index.find((entry: THelperRegistryIndexItem) => entry.name === item);
 
     if (!entry) continue;
     tree.push(entry);
@@ -123,8 +118,8 @@ export const resolveHelperTree = async (
 
   // -> Filter out duplicates
   return tree.filter(
-    (entry: THelpersRegistryIndexItem, index: number, self: THelpersRegistryIndex) =>
-      self.findIndex((e: THelpersRegistryIndexItem) => e.name === entry.name) === index
+    (entry: THelperRegistryIndexItem, index: number, self: THelpersRegistryIndex) =>
+      self.findIndex((e: THelperRegistryIndexItem) => e.name === entry.name) === index
   );
 };
 
@@ -147,10 +142,10 @@ export const fetchHelperTree = async (
   tree: THelpersRegistryIndex, { registryType }: { registryType: TAvailableRegistryTypes }
 ) => {
   try {
-    const paths = tree.map((entry: THelpersRegistryIndexItem) => `${entry.name}.json`);
+    const paths = tree.map((entry: THelperRegistryIndexItem) => `${entry.name}.json`);
     const result = await fetchRegistry(paths, { registryType });
 
-    return helpersRegistryIndexSchema.parse(result);
+    return helperRegistryIndexSchema.parse(result);
   } catch (error) {
     console.error(`Error encountered while fetching import tree from the helpers registry -> ${error}`);
   }
