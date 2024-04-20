@@ -24,10 +24,16 @@ export const transformImports: TTransform = async ({ sourceFile, config }) => {
         moduleSpecifier.replace(/^@\/types/, config.aliases.types)
       );
     }
-    
+
     if (moduleSpecifier === "@/constants") {
       importDeclaration.setModuleSpecifier(
-        moduleSpecifier.replace(/^@\/constants/, config.aliases.types)
+        moduleSpecifier.replace(/^@\/constants/, config.aliases.constants)
+      );
+    }
+
+    if (moduleSpecifier === "@/icons") {
+      importDeclaration.setModuleSpecifier(
+        moduleSpecifier.replace(/^@\/icons/, config.aliases.icons)
       );
     }
   }

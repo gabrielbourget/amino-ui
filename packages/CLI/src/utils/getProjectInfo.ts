@@ -4,7 +4,10 @@ import fg from "fast-glob";
 import path from "path";
 import { loadConfig } from "tsconfig-paths";
 
-import { DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_CSS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig, resolveConfigPaths } from "@/src/utils/config";
+import {
+  DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_GLOBAL_CSS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH,
+  DEFAULT_TEXT_CSS_PATH, DEFAULT_UTILS_PATH, getConfig, resolveConfigPaths
+} from "@/src/utils/config";
 import type { TCoreConfig, TConfig } from "./config/schema";
 
 export const PROJECT_TYPE__NEXT_APP_SRC = "next-app-src";
@@ -12,7 +15,7 @@ export const PROJECT_TYPE__NEXT_APP = "next-app";
 export const PROJECT_TYPE__NEXT_PAGES_SRC = "next-pages-src";
 export const PROJECT_TYPE__NEXT_PAGES = "next-pages";
 
-// - TODO: -> Expand beyond NextJS to support vanilla React, Remix, etc.
+// - TODO: -> Expand beyond NextJS to support vanilla React, Remix, Vite, Gatsby, etc.
 export const SUPPORTED_PROJECT_TYPES = [
   PROJECT_TYPE__NEXT_APP_SRC, PROJECT_TYPE__NEXT_APP, PROJECT_TYPE__NEXT_PAGES_SRC, PROJECT_TYPE__NEXT_PAGES
 ] as const;
@@ -41,8 +44,10 @@ export const getProjectInfo = async () => {
       tsconfig,
       srcDir: existsSync(path.resolve("./src")),
       appDir: existsSync(path.resolve("./app")) || existsSync(path.resolve("./src/app")),
-      srcComponentsUiDir: existsSync(path.resolve("./src/components")),
-      componentsUiDir: existsSync(path.resolve("./components"))
+      srcComponentsDir: existsSync(path.resolve("./src/components")),
+      componentsDir: existsSync(path.resolve("./components")),
+      srcComponentsIconDir: existsSync(path.resolve("./src/components/icons")),
+      componentsIconDir: existsSync(path.resolve("./components/icons")),
     };
   } catch (error) {
     return projectInfo;
@@ -65,7 +70,7 @@ export const getProjectConfig = async (cwd: string): Promise<TConfig | null> => 
 
   const defaultCoreConfig: TCoreConfig = {
     // - TODO: -> Replace with actual deployment link once dpeloyed.
-    $schema: "https://wrapper-component-library.com/schema.json",
+    $schema: "https://aminoui.com/schema.json",
     rsc: [PROJECT_TYPE__NEXT_APP_SRC, PROJECT_TYPE__NEXT_APP].includes(projectType),
     tsx: isTypescriptProject,
     aliases: {
@@ -74,7 +79,8 @@ export const getProjectConfig = async (cwd: string): Promise<TConfig | null> => 
       types: `${tsConfigAliasPrefix}/${DEFAULT_TYPES_PATH}`,
       constants: `${tsConfigAliasPrefix}/${DEFAULT_CONSTANTS_PATH}`,
       icons: `${tsConfigAliasPrefix}/${DEFAULT_ICONS_PATH}`,
-      globalCSS: `${tsConfigAliasPrefix}/${DEFAULT_CSS_PATH}`,
+      globalCSS: `${tsConfigAliasPrefix}/${DEFAULT_GLOBAL_CSS_PATH}`,
+      textCSS: `${tsConfigAliasPrefix}/${DEFAULT_TEXT_CSS_PATH}`,
     }
   };
 

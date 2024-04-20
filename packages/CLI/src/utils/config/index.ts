@@ -5,12 +5,12 @@ import { resolveImport } from "@/src/utils/resolveImport";
 import { type TConfig, coreConfigSchema, type TCoreConfig, configSchema } from "@/src/utils/config/schema";
 
 export const DEFAULT_COMPONENTS_PATH = "@/components";
+export const DEFAULT_ICONS_PATH = "@/components/icons";
 export const DEFAULT_UTILS_PATH = "@/utils";
 export const DEFAULT_TYPES_PATH = "@/types";
 export const DEFAULT_CONSTANTS_PATH = "@/constants";
-export const DEFAULT_ICONS_PATH = "@/icons";
-// - TODO: -> Merge globals.css, variables.css, and utils.css into one css file.
-export const DEFAULT_CSS_PATH = "@/";
+export const DEFAULT_GLOBAL_CSS_PATH = "@/";
+export const DEFAULT_TEXT_CSS_PATH = "@/";
 
 export const getConfig = async (cwd: string) => {
   const config = await getCoreConfig(cwd);
@@ -37,13 +37,15 @@ export const resolveConfigPaths = async (cwd: string, config: TCoreConfig): Prom
       types: await resolveImport(config.aliases["types"], tsConfig),
       constants: await resolveImport(config.aliases["constants"], tsConfig),
       globalCSS: await resolveImport(config.aliases["globalCSS"], tsConfig),
+      textCSS: await resolveImport(config.aliases["textCSS"], tsConfig),
     }
   });
 };
 
 export const getCoreConfig = async (cwd: string): Promise<TCoreConfig | undefined> => {
   try {
-    const explorer = cosmiconfig("components", { searchPlaces: ["components.json"] });
+    // - TODO: -> Consider supporting user-customized config file name and type.
+    const explorer = cosmiconfig("components", { searchPlaces: ["amino-components.json"] });
     const configResult = await explorer.search(cwd);
 
     if (!configResult) return undefined;

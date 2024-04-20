@@ -11,9 +11,8 @@ const { detect: detectPackageManager } = require("detect-package-manager");
 // import { detect as detectPackageManager } from "detect-package-manager";
 
 import { logger, handleError } from "@/src/utils";
-import { fetchTree, getItemTargetPath, getRegistryIndex, resolveTree } from "@/src/utils/registry";
-import { TRegistryIndexItem, TRegistryIndexItemFile, registryIndexItemSchema } from "@/src/utils/registry/schema";
-import { kebabToPascalCase } from "@/src/utils/stringUtils";
+import { fetchComponentTree, getItemTargetPath, getRegistryIndex, resolveComponentTree } from "@/src/utils/registry";
+import { TComponentRegistryIndex, TComponentRegistryIndexItem, TIndexItemFile, componentRegistryIndexItemSchema } from "@/src/utils/registry/schema";
 import {
   computePackageManagerAddCommand, computePackageManagerDevDependencyFlag
 } from "@/src/utils/packageManagerHelpers";
@@ -60,10 +59,10 @@ export const add = new Command()
         process.exit(1);
       }
 
-      const registryIndex = await getRegistryIndex();
+      const componentRegistryIndex = await getRegistryIndex({ registryType: "components" }) as TComponentRegistryIndex;
 
       let selectedComponents = (options.allComponents) ?
-        registryIndex.map((entry: z.infer<typeof registryIndexItemSchema>) => entry.name) : options.components;
+        componentRegistryIndex.map((entry: z.infer<typeof componentRegistryIndexItemSchema>) => entry.name) : options.components;
 
       if (!options.components?.length && !options.allComponents) {
         const { components } = await prompts({
@@ -75,7 +74,7 @@ export const add = new Command()
             Press ${chalk.green("<enter>")} when your selection is complete.
           `,
           instructions: false,
-          choices: registryIndex.map((item: TRegistryIndexItem) => ({
+          choices: componentRegistryIndex.map((item: TComponentRegistryIndexItem) => ({
             title: item.name,
             value: item.name,
             selected: options.allComponents ? true : options.components?.includes(item.name)
@@ -90,8 +89,10 @@ export const add = new Command()
         process.exit(0);
       }
 
-      const tree = await resolveTree(registryIndex, selectedComponents);
-      const resolvedPayload = await fetchTree(tree);
+      // - TODO: -> Somehow need to account for recursion through nested directory structures, and maintain that directory structure
+      //            to recreate it on the user's machine who's using the CLI.
+      const tree = await resolveComponentTree(componentRegistryIndex, selectedComponents);
+      const resolvedPayload = await fetchComponentTree(tree, { registryType: "components"});
 
       if (!resolvedPayload?.length) {
         logger.warn("The components you selected could not be found.");
@@ -115,15 +116,14 @@ export const add = new Command()
         spinner.text = `Installing ${item.name}...`;
 
         const targetPath = await getItemTargetPath(
-          config, options.path ? path.resolve(cwd, options.path) : undefined
+          config, "components", options.path ? path.resolve(cwd, options.path) : undefined
         );
 
-        // - TODO: Potentially remove this depending on implementation of getItemTargetPath()
         if (!targetPath) return;
 
         if (!existsSync(targetPath)) fs.mkdir(targetPath, { recursive: true });
 
-        const componentExists = existsSync(path.resolve(targetPath, kebabToPascalCase(item.name)));
+        const componentExists = existsSync(path.resolve(targetPath, item.directory));
 
         if (componentExists && !options.overwrite) {
           if (selectedComponents.includes(item.name)) {
@@ -153,11 +153,11 @@ export const add = new Command()
           return;
         }
 
-        fs.mkdir(kebabToPascalCase(item.name), { recursive: true });
+        fs.mkdir(item.directory, { recursive: true });
 
-        item.files.forEach(async (file: TRegistryIndexItemFile) => {
-          let filePath = path.resolve(targetPath, kebabToPascalCase(item.name), file.name);
-          
+        item.files.forEach(async (file: TIndexItemFile) => {
+          let filePath = path.resolve(targetPath, item.directory, file.name);
+
           // - TODO: -> Run code transforms here.
 
           await fs.writeFile(filePath, item.content);

@@ -3,22 +3,30 @@
 import { existsSync, promises as fs } from "fs";
 import { Command } from "commander";
 import path from "path";
+import chalk from "chalk";
+import prompts from "prompts";
+import ora from "ora";
 import { z } from "zod";
 
 import { handleError } from "@/src/utils/handleError";
 import { logger } from "@/src/utils/logger";
+import * as constantTemplates from "@/src/utils/config/templates/constants";
+import * as typeTemplates from "@/src/utils/config/templates/types";
+import * as utilTemplates from "@/src/utils/config/templates/utils";
+import * as iconTemplates from "@/src/utils/config/templates/icons";
+import globalCSSTemplate from "@/src/utils/config/templates/globalCSS";
+import textCSSTemplate from "@/src/utils/config/templates/textCSS";
 import { getProjectConfig } from "@/src/utils/getProjectInfo";
 import {
-  DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_CSS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig,
-  resolveConfigPaths
+  DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig,
+  resolveConfigPaths, DEFAULT_GLOBAL_CSS_PATH, DEFAULT_TEXT_CSS_PATH
 } from "@/src/utils/config";
-import chalk from "chalk";
 import { coreConfigSchema, type TConfig, type TCoreConfig } from "../utils/config/schema";
-import prompts from "prompts";
-import ora from "ora";
 
 // - TODO: -> Figure out what's in this list.
-const BASE_COMPONENT_LIBRARY_DEPENDENCIES = [];
+const BASE_COMPONENT_LIBRARY_DEPENDENCIES = [
+  "react", "react-dom", "classnames",
+];
 
 const initOptionsSchema = z.object({
   cwd: z.string(),
@@ -127,12 +135,18 @@ export const promptForConfig = async (
       type: "text",
       name: "globalCSSAlias",
       message: `Where is your ${highlight("global CSS")} file?`,
-      initial: defaultConfig?.aliases.globalCSS ?? DEFAULT_CSS_PATH,
+      initial: defaultConfig?.aliases.globalCSS ?? DEFAULT_GLOBAL_CSS_PATH,
+    },
+    {
+      type: "text",
+      name: "textCSSAlias",
+      message: `Where would you like to place the common ${highlight("text CSS")} file?`,
+      initial: defaultConfig?.aliases.globalCSS ?? DEFAULT_TEXT_CSS_PATH,
     },
   ]);
 
   const config = coreConfigSchema.parse({
-    "$schema": "https://wrapper-component-library.com/schema.json",
+    "$schema": "https://aminoui.com/schema.json",
     rsc: options.rsc,
     tsx: options.tsx,
     aliases: {
@@ -142,6 +156,7 @@ export const promptForConfig = async (
       constants: options.constantsAlias,
       icons: options.iconsAlias,
       globalCSS: options.globalCSSAlias,
+      textCSS: options.textCSSAlias,
     }
   });
 
@@ -156,17 +171,46 @@ export const promptForConfig = async (
     if (!proceed) process.exit(0);
   }
 
-
   logger.newLine();
-  const spinner = ora(`Writing configuration details to components.json...`).start()
-  const targetPath = path.resolve(cwd, "components.json")
-  await fs.writeFile(targetPath, JSON.stringify(config, null, 3), "utf8")
-  spinner.succeed()
+  const spinner = ora(`Writing configuration details to amino-components.json...`).start();
+  // - TODO: -> Consider exposing the config file name and type to the CLI so the user can customize.
+  const targetPath = path.resolve(cwd, "amino-components.json");
+  await fs.writeFile(targetPath, JSON.stringify(config, null, 3), "utf8");
+  spinner.succeed();
 
-  return await resolveConfigPaths(cwd, config)
+  return await resolveConfigPaths(cwd, config);
 };
 
 export const runInit = async (cwd: string, config: TConfig) => {
+  const spinner = ora(`Initializing project...`).start();
 
-  
+  for (const [key, resolvedPath] of Object.entries(config.resolvedPaths)) {
+    let dirName = (path.extname(resolvedPath) === "") ? resolvedPath : path.dirname(resolvedPath);
+    if (!existsSync(dirName)) await fs.mkdir(dirName, { recursive: true });
+  }
+
+  const targetJSXTSXFileExtension = config.tsx ? "tsx" : "jsx";
+  const targetJSTSFileExtension = config.tsx ? "ts" : "js";
+
+  // - TODO: -> Run imports code transform before writing files to calibrate imports to config file
+  //   aliases in the user's codebase.
+
+  // -> Write  to util files
+  // - TODO: -> Handle existing files by appending to them.
+  // await fs.writeFile(
+  //   config.resolvedPaths.utils,
+  // )
+
+  // await fs.writeFile(
+  //   config.resolvedPaths.tailwindConfig,
+  //   template(tailwindConfigTemplate)({
+  //     extension,
+  //     prefix: config.tailwind.prefix,
+  //   }),
+  //   "utf8"
+  // )
+  // -> Write types file
+  // -> Write constants files 게
+  // -> Write icons files
+  // -> Write global CSS file
 };
