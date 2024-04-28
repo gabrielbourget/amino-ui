@@ -22,6 +22,11 @@ export const helpers: THelperRegistry = [
     file: "theme.ts"
   },
   {
+    name: "types/data",
+    type: "types",
+    file: "data.ts"
+  },
+  {
     name: "types/geometry",
     type: "types",
     file: "geometry.ts"
