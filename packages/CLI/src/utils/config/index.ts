@@ -1,4 +1,3 @@
-import path from "path"
 import { loadConfig } from "tsconfig-paths";
 import { cosmiconfig } from "cosmiconfig";
 import { resolveImport } from "@/src/utils/resolveImport";
@@ -46,7 +45,7 @@ export const resolveConfigPaths = async (cwd: string, config: TCoreConfig): Prom
 export const getCoreConfig = async (cwd: string): Promise<TCoreConfig | undefined> => {
   try {
     // - TODO: -> Consider supporting user-customized config file name and type.
-    const explorer = cosmiconfig("components", { searchPlaces: ["amino-components.json"] });
+    const explorer = cosmiconfig("components", { searchPlaces: [DEFAULT_COMPONENT_CONFIG_FILE] });
     const configResult = await explorer.search(cwd);
 
     if (!configResult) return undefined;

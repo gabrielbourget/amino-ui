@@ -7,6 +7,11 @@ export const helpers: THelperRegistry = [
     file: "data.ts"
   },
   {
+    name: "utils/ui",
+    type: "utils",
+    file: "ui.ts"
+  },
+  {
     name: "constants/geometry",
     type: "constants",
     file: "geometry.ts"
