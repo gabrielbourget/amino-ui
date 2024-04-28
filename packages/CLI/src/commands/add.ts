@@ -6,8 +6,8 @@ import { z } from "zod";
 import chalk from "chalk";
 import prompts from "prompts";
 import { execa } from "execa";
-
 const { detect: detectPackageManager } = require("detect-package-manager");
+
 // import { detect as detectPackageManager } from "detect-package-manager";
 
 import { logger, handleError } from "@/src/utils";

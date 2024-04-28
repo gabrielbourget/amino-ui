@@ -7,6 +7,7 @@ import chalk from "chalk";
 import prompts from "prompts";
 import ora from "ora";
 import { z } from "zod";
+const { detect: detectPackageManager } = require("detect-package-manager");
 
 import { handleError } from "@/src/utils/handleError";
 import { logger } from "@/src/utils/logger";
@@ -17,6 +18,8 @@ import {
   DEFAULT_COMPONENT_CONFIG_FILE
 } from "@/src/utils/config";
 import { coreConfigSchema, type TConfig, type TCoreConfig } from "../utils/config/schema";
+import { computePackageManagerAddCommand, computePackageManagerDevDependencyFlag } from "../utils/packageManagerHelpers";
+import { execa } from "execa";
 
 // - TODO: -> Figure out what's in this list.
 const BASE_COMPONENT_LIBRARY_DEPENDENCIES = [
@@ -52,15 +55,15 @@ export const init = new Command()
       const projectConfig = await getProjectConfig(cwd);
 
       if (projectConfig) {
-        // const config = await promptForMinimalConfig(cwd, projectConfig, options.defaults);
-        // await runInit(cwd, config);
         // - TODO: -> Consider edge case where there is an existing config but you'd like to modify it through the command line interface.
+        logger.info(`${chalk.green("[ Existing Configuration Detected ]")}`);
+        return;
       }
       
       else {
         const existingConfig = await getConfig(cwd)
         const config = await promptForConfig(cwd, existingConfig, options.skipConfirmationPrompt);
-        await runInit(cwd, config)
+        await runInit(cwd, config);
       }
 
       logger.newLine();
@@ -83,7 +86,7 @@ export const promptForConfig = async (
     {
       type: "toggle",
       name: "rsc",
-      message: `Would you like to use ${highlight("React Server Components")}?`,
+      message: `Are you using ${highlight("React Server Components")}?`,
       initial: defaultConfig?.rsc ?? true,
       active: "yes",
       inactive: "no",
@@ -159,7 +162,7 @@ export const promptForConfig = async (
     const { proceed } = await prompts({
       type: "confirm",
       name: "proceed",
-      message: `Configuration will be written to ${highlight("components.json")}. Proceed?`,
+      message: `Configuration will be written to ${highlight(DEFAULT_COMPONENT_CONFIG_FILE)}. Proceed?`,
       initial: true,
     });
 
@@ -167,7 +170,7 @@ export const promptForConfig = async (
   }
 
   logger.newLine();
-  const spinner = ora(`Writing configuration details to amino-components.json...`).start();
+  const spinner = ora(`Writing details to configuration file...`).start();
   // - TODO: -> Consider exposing the config file name and type to the CLI so the user can customize.
   const targetPath = path.resolve(cwd, DEFAULT_COMPONENT_CONFIG_FILE);
   await fs.writeFile(targetPath, JSON.stringify(config, null, 3), "utf8");
@@ -188,7 +191,7 @@ export const runInit = async (cwd: string, config: TConfig) => {
   const targetJSTSFileExtension = config.tsx ? "ts" : "js";
 
   // - TODO: -> Run imports code transform before writing files to calibrate imports to config file
-  //   aliases in the user's codebase.
+  //   aliases in the CLI user's preferences.
 
   // -> Write  to util files
   // - TODO: -> Handle existing files by appending to them.
@@ -196,16 +199,19 @@ export const runInit = async (cwd: string, config: TConfig) => {
   //   config.resolvedPaths.utils,
   // )
 
-  // await fs.writeFile(
-  //   config.resolvedPaths.tailwindConfig,
-  //   template(tailwindConfigTemplate)({
-  //     extension,
-  //     prefix: config.tailwind.prefix,
-  //   }),
-  //   "utf8"
-  // )
   // -> Write types file
-  // -> Write constants files 게
-  // -> Write icons files
+  // -> Write constants files
+  // -> Write utils files
+  // -> Write text CSS file
   // -> Write global CSS file
+
+  // -> Install base component library dependencies
+  const packageManager = detectPackageManager();
+  const packageManagerAddCommand = computePackageManagerAddCommand(packageManager);
+
+  await execa(
+    packageManager,
+    [packageManagerAddCommand, ...BASE_COMPONENT_LIBRARY_DEPENDENCIES],
+    { cwd }
+  );
 };

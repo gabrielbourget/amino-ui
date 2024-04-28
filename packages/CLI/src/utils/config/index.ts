@@ -10,7 +10,7 @@ export const DEFAULT_TYPES_PATH = "@/types";
 export const DEFAULT_CONSTANTS_PATH = "@/constants";
 export const DEFAULT_GLOBAL_CSS_PATH = "@/";
 export const DEFAULT_TEXT_CSS_PATH = "@/";
-export const DEFAULT_COMPONENT_CONFIG_FILE = "amino-components.json";
+export const DEFAULT_COMPONENT_CONFIG_FILE = "amino-components.config.json";
 
 export const getConfig = async (cwd: string) => {
   const config = await getCoreConfig(cwd);
@@ -45,7 +45,7 @@ export const resolveConfigPaths = async (cwd: string, config: TCoreConfig): Prom
 export const getCoreConfig = async (cwd: string): Promise<TCoreConfig | undefined> => {
   try {
     // - TODO: -> Consider supporting user-customized config file name and type.
-    const explorer = cosmiconfig("components", { searchPlaces: [DEFAULT_COMPONENT_CONFIG_FILE] });
+    const explorer = cosmiconfig("amino-components", { searchPlaces: [DEFAULT_COMPONENT_CONFIG_FILE] });
     const configResult = await explorer.search(cwd);
 
     if (!configResult) return undefined;

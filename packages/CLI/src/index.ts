@@ -1,6 +1,9 @@
 import { Command } from "commander";
 // import figlet from "figlet";
 import { getPackageInfo } from "./utils/getPackageInfo";
+import { diff } from "./commands/diff";
+import { add } from "./commands/add";
+import { init } from "./commands/init";
 
 process.on("SIGINT", () => process.exit(0));
 process.on("SIGTERM", () => process.exit(0));
@@ -9,7 +12,7 @@ const main = async () => {
   const packageInfo = getPackageInfo();
 
   const program = new Command()
-    .name("wrapper-component-library-cli")
+    .name("amino-ui-cli")
     .description("Add components and their dependencies directly into your project as needed.")
     .version(
       packageInfo.version!,
@@ -17,7 +20,7 @@ const main = async () => {
       "Display the version number."
     );
 
-  // - TODO: -> Implement and add to CLI add, init, remove, and diff commands.
+  program.addCommand(init).addCommand(add).addCommand(diff);
 
   program.parse();
 };
