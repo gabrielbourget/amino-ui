@@ -13,7 +13,8 @@ import { logger } from "@/src/utils/logger";
 import { getProjectConfig } from "@/src/utils/getProjectInfo";
 import {
   DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig,
-  resolveConfigPaths, DEFAULT_GLOBAL_CSS_PATH, DEFAULT_TEXT_CSS_PATH
+  resolveConfigPaths, DEFAULT_GLOBAL_CSS_PATH, DEFAULT_TEXT_CSS_PATH,
+  DEFAULT_COMPONENT_CONFIG_FILE
 } from "@/src/utils/config";
 import { coreConfigSchema, type TConfig, type TCoreConfig } from "../utils/config/schema";
 
@@ -168,7 +169,7 @@ export const promptForConfig = async (
   logger.newLine();
   const spinner = ora(`Writing configuration details to amino-components.json...`).start();
   // - TODO: -> Consider exposing the config file name and type to the CLI so the user can customize.
-  const targetPath = path.resolve(cwd, "amino-components.json");
+  const targetPath = path.resolve(cwd, DEFAULT_COMPONENT_CONFIG_FILE);
   await fs.writeFile(targetPath, JSON.stringify(config, null, 3), "utf8");
   spinner.succeed();
 

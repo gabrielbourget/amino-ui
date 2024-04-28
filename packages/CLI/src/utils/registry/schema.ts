@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { type ZodType, z } from "zod";
 
 export const REGISTRY_TYPE__COMPONENTS = "components";
 export const REGISTRY_TYPE__HELPERS = "helpers";
@@ -39,10 +39,33 @@ export const helpersRegistryIndexItemKeymap: THelperRegistryIndexKeymap = {
   [REGISTRY_ITEM_TYPE__TEXT_CSS]: REGISTRY_ITEM_TYPE__TEXT_CSS
 };
 
-export const registryIndexItemFileSchema = z.object({
+export type TRegistryIndexItemFile = {
+  name: string;
+  content: string;
+};
+
+export type TRegistryIndexItemDirectory = {
+  name: string;
+  content: (TRegistryIndexItemFile | TRegistryIndexItemDirectory)[];
+};
+
+const registryIndexItemFileSchema = z.object({
   name: z.string(),
+  pathSegment: z.string(),
   content: z.string()
 });
+
+const registryIndexItemDirectorySchema: ZodType<TRegistryIndexItemDirectory> = z.lazy(() =>
+  z.object({
+    name: z.string(),
+    content: z.array(
+      z.union([registryIndexItemFileSchema, registryIndexItemDirectorySchema])
+    )
+  })
+);
+
+export { registryIndexItemDirectorySchema };
+
 
 export type TIndexItemFile = z.infer<typeof registryIndexItemFileSchema>;
 
@@ -53,8 +76,7 @@ export const componentRegistryIndexItemSchema = z.object({
   devDependencies: z.array(z.string()).optional(),
   componentRegistryDependencies: z.array(z.string()).optional(),
   helpersRegistryDependencies: z.array(z.string()).optional(),
-  directory: z.array(z.string()),
-  files: z.array(registryIndexItemFileSchema)
+  directory: registryIndexItemDirectorySchema,
 });
 
 export type TComponentRegistryIndexItem = z.infer<typeof componentRegistryIndexItemSchema>;
@@ -66,7 +88,7 @@ export type TComponentRegistryIndex = z.infer<typeof componentRegistryIndexSchem
 export const helperRegistryIndexItemSchema = z.object({
   name: z.string(),
   type: availableRegistryItemTypeSchema,
-  files: z.array(registryIndexItemFileSchema)
+  file: registryIndexItemFileSchema
 });
 
 export type THelperRegistryIndexItem = z.infer<typeof helperRegistryIndexItemSchema>;

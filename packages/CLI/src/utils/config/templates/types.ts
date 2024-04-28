@@ -32,3 +32,5 @@ export type TIconProps = {
 
 export const utils = `export type TIntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 `;
+
+export const data = `export type TGenericItem = { id: string; name: string; };`

@@ -12,7 +12,7 @@ const { detect: detectPackageManager } = require("detect-package-manager");
 
 import { logger, handleError } from "@/src/utils";
 import { fetchComponentTree, getItemTargetPath, getRegistryIndex, resolveComponentTree } from "@/src/utils/registry";
-import { TComponentRegistryIndex, TComponentRegistryIndexItem, TIndexItemFile, componentRegistryIndexItemSchema } from "@/src/utils/registry/schema";
+import { TComponentRegistryIndex, TComponentRegistryIndexItem, TIndexItemFile, TRegistryIndexItemDirectory, TRegistryIndexItemFile, componentRegistryIndexItemSchema } from "@/src/utils/registry/schema";
 import {
   computePackageManagerAddCommand, computePackageManagerDevDependencyFlag
 } from "@/src/utils/packageManagerHelpers";
@@ -90,8 +90,6 @@ export const add = new Command()
         process.exit(0);
       }
 
-      // - TODO: -> Somehow need to account for recursion through nested directory structures, and maintain that directory structure
-      //            to recreate it on the user's machine who's using the CLI.
       const tree = await resolveComponentTree(componentRegistryIndex, selectedComponents);
       const resolvedPayload = await fetchComponentTree(tree, { registryType: "components"});
 
@@ -113,7 +111,7 @@ export const add = new Command()
 
       const spinner = ora(`Installing selected components...`).start();
 
-      resolvedPayload.forEach(async (item: any) => {
+      resolvedPayload.forEach(async (item: TComponentRegistryIndexItem) => {
         spinner.text = `Installing ${item.name}...`;
 
         const targetPath = await getItemTargetPath(
@@ -124,7 +122,7 @@ export const add = new Command()
 
         if (!existsSync(targetPath)) fs.mkdir(targetPath, { recursive: true });
 
-        const componentExists = existsSync(path.resolve(targetPath, item.directory));
+        const componentExists = existsSync(path.resolve(targetPath, item.directory.name));
 
         if (componentExists && !options.overwrite) {
           if (selectedComponents.includes(item.name)) {
@@ -154,14 +152,18 @@ export const add = new Command()
           return;
         }
 
-        fs.mkdir(item.directory, { recursive: true });
+        fs.mkdir(item.directory.name, { recursive: true });
 
-        item.files.forEach(async (file: TIndexItemFile) => {
-          let filePath = path.resolve(targetPath, item.directory, file.name);
+        // - TODO: -> Recursively iterate through component's directory structure, installing all files
+        //            and sub-directories in the correct structure at the properly resolved components
+        //            directory path.
+
+        item.directory.content.forEach(async (file: TRegistryIndexItemFile | TRegistryIndexItemDirectory) => {
+          let filePath = path.resolve(targetPath, item.directory.name, file.name);
 
           // - TODO: -> Run code transforms here.
 
-          await fs.writeFile(filePath, item.content);
+          // await fs.writeFile(filePath, item.content);
         });
 
         const packageManager = detectPackageManager();

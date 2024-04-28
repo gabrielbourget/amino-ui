@@ -11,6 +11,7 @@ export const DEFAULT_TYPES_PATH = "@/types";
 export const DEFAULT_CONSTANTS_PATH = "@/constants";
 export const DEFAULT_GLOBAL_CSS_PATH = "@/";
 export const DEFAULT_TEXT_CSS_PATH = "@/";
+export const DEFAULT_COMPONENT_CONFIG_FILE = "amino-components.json";
 
 export const getConfig = async (cwd: string) => {
   const config = await getCoreConfig(cwd);
