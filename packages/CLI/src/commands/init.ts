@@ -10,12 +10,6 @@ import { z } from "zod";
 
 import { handleError } from "@/src/utils/handleError";
 import { logger } from "@/src/utils/logger";
-import * as constantTemplates from "@/src/utils/config/templates/constants";
-import * as typeTemplates from "@/src/utils/config/templates/types";
-import * as utilTemplates from "@/src/utils/config/templates/utils";
-import * as iconTemplates from "@/src/utils/config/templates/icons";
-import globalCSSTemplate from "@/src/utils/config/templates/globalCSS";
-import textCSSTemplate from "@/src/utils/config/templates/textCSS";
 import { getProjectConfig } from "@/src/utils/getProjectInfo";
 import {
   DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig,

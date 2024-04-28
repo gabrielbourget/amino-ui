@@ -27,6 +27,7 @@ const addOptionsSchema = z.object({
   path: z.string().optional()
 });
 
+// - TODO: -> Logic to handle adding icons, placing them in their correct directory.
 export const add = new Command()
   .name("add")
   .description("Add one or more components to your project.")

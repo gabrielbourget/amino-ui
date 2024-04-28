@@ -1,5 +1,7 @@
 import type { TComponentRegistry } from "./schema";
 
+// - TODO: -> Add to utils: TGenericITem
+
 const baseDependencies = ["react", "react-dom", "classnames"];
 
 export const components: TComponentRegistry = [
@@ -29,7 +31,7 @@ export const components: TComponentRegistry = [
       "text", "button", "garbage-bin-icon", "checkmark-icon", "info-icon", "octagon-frame-exclamation-icon",
       "triangle-frame-exclamation-icon", "x-icon"
     ],
-    helperRegistryDependencies: [""],
+    helperRegistryDependencies: ["textCSS", "types/accessibility", "constants/geometry", "types/geometry"],
     directory: "AlertDialog",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -54,13 +56,17 @@ export const components: TComponentRegistry = [
     name: "button",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["constants/theme", "constants/geometry", "types/theme", "types/geometry"],
     directory: "Button",
   },
   {
     name: "breadcrumbs",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button", "click-popover", "link", "listbox-item", "text"],
+    componentRegistryDependencies: [
+      "button", "click-popover", "link", "listbox-item", "text", "context-menu-horizontal-icon", "chevron-right-icon`"
+    ],
+    helperRegistryDependencies: ["constants/theme", "types/theme", "types/accessibility", "types/utils"],
     directory: "Breadcrumbs",
   },
   {
@@ -81,6 +87,7 @@ export const components: TComponentRegistry = [
     name: "checkbox",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["helpers/theme", "constants/theme", "helpers/geometry", "constants/geometry"],
     directory: "Checkbox",
   },
   {
@@ -118,6 +125,7 @@ export const components: TComponentRegistry = [
     name: "circular-progress",
     isIcon: false,
     dependencies: ["framer-motion", "react-aria-components"],
+    helperRegistryDependencies: ["constants/ui", "constants/theme", "types/theme", "types/ui"],
     directory: "CircularProgress",
   },
   {
@@ -129,6 +137,7 @@ export const components: TComponentRegistry = [
     name: "click-popover",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["constants/theme", "constants/geometry", "types/theme", "types/geometry"],
     directory: "ClickPopover",
   },
   {
@@ -140,7 +149,8 @@ export const components: TComponentRegistry = [
     name: "combo-box",
     isIcon: false,
     dependencies: ["framer-motion", "react-aria-components"],
-    componentRegistryDependencies: ["button", "input"],
+    componentRegistryDependencies: ["button", "input", "chevron-down-icon"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "types/ui"],
     directory: "ComboBox",
   },
   {
@@ -153,22 +163,23 @@ export const components: TComponentRegistry = [
     isIcon: false,
     dependencies: ["react-aria-components"],
     componentRegistryDependencies: ["circular-progress", "text"],
+    helperRegistryDependencies: ["types/accessibility"],
     directory: "Counter",
   },
-  // - TODO: -> Decide how to place common calendar styles
   {
     name: "datetime-picker",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button"],
+    componentRegistryDependencies: ["button", "calendar-icon", "chevron-right-icon", "chevron-left-icon"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "types/ui", "textCSS"],
     directory: "DateTimePicker",
   },
-  // - TODO: -> Decide how to place common calendar styles
   {
     name: "datetime-range-picker",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button"],
+    componentRegistryDependencies: ["button", "calendar-icon", "chevron-right-icon", "chevron-left-icon"],
+    helperRegistryDependencies: ["types/geometry", "constants/geometry", "types/ui", "textCSS"],
     directory: "DateTimeRangePicker",
   },
   {
@@ -204,6 +215,7 @@ export const components: TComponentRegistry = [
     isIcon: false,
     dependencies: ["react-aria-components"],
     componentRegistryDependencies: ["text"],
+    helperRegistryDependencies: ["types/accessibility"],
     directory: "FormField",
   },
   {
@@ -215,6 +227,7 @@ export const components: TComponentRegistry = [
     name: "hover-popover",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["constants/theme", "types/themes", "constants/geometry", "types/geometry"],
     directory: "HoverPopover",
   },
   {
@@ -226,30 +239,35 @@ export const components: TComponentRegistry = [
     name: "input",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["types/geometry", "constants/geometry", "textCSS"],
     directory: "Input",
   },
   {
     name: "line-segment",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["constants/geometry"],
     directory: "LineSegment",
   },
   {
     name: "linear-progress",
     isIcon: false,
     dependencies: ["framer-motion", "react-aria-components"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "types/theme"],
     directory: "LinearProgress",
   },
   {
     name: "link",
     isIcon: false,
     dependencies: ["next/link", "react"],
+    helperRegistryDependencies: ["constants/theme", "types/theme", "types/accessibility"],
     directory: "Link",
   },
   {
     name: "listbox-item",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["textCSS"],
     directory: "ListBoxItem",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -274,6 +292,7 @@ export const components: TComponentRegistry = [
     name: "meter",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "constants/theme", "types/theme"],
     directory: "Meter",
   },
   {
@@ -286,13 +305,17 @@ export const components: TComponentRegistry = [
     isIcon: false,
     dependencies: ["react-aria-components"],
     componentRegistryDependencies: ["button", "text"],
+    helperRegistryDependencies: [
+      "textCSS", "constants/theme", "types/theme", "constants/geometry", "types/geometry", "types/accessibility"
+    ],
     directory: "Modal",
   },
   {
     name: "number-input",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button", "input"],
+    componentRegistryDependencies: ["button", "input", "chevron-up-icon", "chevron-down-icon"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry"],
     directory: "NumberInput",
   },
   {
@@ -308,6 +331,10 @@ export const components: TComponentRegistry = [
       "button", "click-popover","counter", "line-segment", "listbox-item", "form-field",
       "number-input", "select", "text"
     ],
+    helperRegistryDependencies: [
+      "constants/geometry", "types/geometry", "constants/theme", "types/theme", "constants/ui", "utils/data",
+      "double-chevron-left-icon", "double-chevron-right-icon", "chevron-left-icon", "chevron-right-icon"
+    ],
     directory: "Pagination",
   },
   {
@@ -319,6 +346,7 @@ export const components: TComponentRegistry = [
     name: "radio",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["types/geometry", "constants/geometry", "types/theme", "constants/theme"],
     directory: "Radio",
   },
   {
@@ -340,7 +368,8 @@ export const components: TComponentRegistry = [
     name: "select",
     isIcon: false,
     dependencies: ["framer-motion", "react-aria-components"],
-    componentRegistryDependencies: ["button"],
+    componentRegistryDependencies: ["button", "chevron-down-icon"],
+    helperRegistryDependencies: ["types/geometry", "types/ui", "textCSS"],
     directory: "Select",
   },
   {
@@ -348,19 +377,22 @@ export const components: TComponentRegistry = [
     isIcon: false,
     dependencies: ["react-aria-components"],
     componentRegistryDependencies: ["text"],
+    helperRegistryDependencies: ["constants/theme", "types/theme", "constants/geometry", "types/geometry", "textCSS"],
     directory: "Slider",
   },
   {
     name: "stepper",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button", "input"],
+    componentRegistryDependencies: ["button", "input", "minus-icon", "plus-icon"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "constants/theme", "types/theme"],
     directory: "Stepper",
   },
   {
     name: "switch",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "constants/theme", "types/theme"],
     directory: "Switch",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -376,14 +408,18 @@ export const components: TComponentRegistry = [
     name: "tag",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button"],
+    componentRegistryDependencies: ["button", "x-icon"],
+    helperRegistryDependencies: ["constants/geometry", "types/geometry", "constants/theme", "types/theme"],
     directory: "Tag",
   },
   {
     name: "tag-combo-box",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["combo-box", "tag-group", "tag"],
+    componentRegistryDependencies: ["combo-box", "tag-group", "tag", "listbox-item", "text"],
+    helperRegistryDependencies: [
+      "constants/gometry", "types/geometry", "constants/theme", "types/theme", "constants/ui", "types/data"
+    ],
     directory: "TagComboBox",
   },
   {
@@ -396,12 +432,14 @@ export const components: TComponentRegistry = [
     name: "text",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["textCSS"],
     directory: "Text",
   },
   {
     name: "textarea",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["types/geometry", "constants/geometry"],
     directory: "TextArea",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
@@ -416,27 +454,34 @@ export const components: TComponentRegistry = [
   {
     name: "time-picker",
     isIcon: false,
-    dependencies: ["react-aria-components"],
+    dependencies: ["react-aria-components", "clock-icon"],
+    helperRegistryDependencies: ["textCSS", "constants/geometry", "types/geometry"],
     directory: "TimePicker",
   },
   {
     name: "toaster",
     isIcon: false,
     dependencies: ["react-aria-components"],
-    componentRegistryDependencies: ["button", "text"],
+    componentRegistryDependencies: [
+      "button", "text", "garbage-bin-icon", "checkmark-icon", "info-icon", "octagon-frame-exclamation-icon",
+      "triangle-frame-exclamation-icon", "x-icon"
+    ],
+    helperRegistryDependencies: ["textCSS", "types/accesibility"],
     directory: "Toaster",
-  },
-  {
-    name: "tooltip",
-    isIcon: false,
-    dependencies: ["react-aria-components"],
-    directory: "",
   },
   {
     name: "toggle-button",
     isIcon: false,
     dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["types/theme", "constants/theme", "types/geometry", "constants/geometry"],
     directory: "ToggleButton",
+  },
+  {
+    name: "tooltip",
+    isIcon: false,
+    dependencies: ["react-aria-components"],
+    helperRegistryDependencies: ["types/theme", "constants/theme", "types/geometry", "constants/geometry"],
+    directory: "",
   },
   // - TODO: -> Uncomment and double check details once component is implemented
   // {
