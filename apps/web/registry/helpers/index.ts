@@ -12,6 +12,11 @@ export const helpers: THelperRegistry = [
     file: "ui.ts"
   },
   {
+    name: "utils/serverSideStyles",
+    type: "utils",
+    file: "serverSideStyles.ts"
+  },
+  {
     name: "constants/geometry",
     type: "constants",
     file: "geometry.ts"

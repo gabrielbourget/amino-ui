@@ -1,4 +1,4 @@
-// amino-ui-helper-file
+// amino-ui-helper-file-marker
 
 export type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
   ? Acc[number]

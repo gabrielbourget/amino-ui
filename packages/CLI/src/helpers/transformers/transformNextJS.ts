@@ -1,4 +1,4 @@
-import { type TTransform } from "@/src/utils/transformers"
+import { type TTransform } from "@/src/helpers/transformers"
 import { SyntaxKind } from "ts-morph"
 
 export const transformNextJS: TTransform = async ({ sourceFile, config }) => {

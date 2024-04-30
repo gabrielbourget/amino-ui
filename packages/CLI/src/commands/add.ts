@@ -10,13 +10,19 @@ const { detect: detectPackageManager } = require("detect-package-manager");
 
 // import { detect as detectPackageManager } from "detect-package-manager";
 
-import { logger, handleError } from "@/src/utils";
-import { fetchComponentTree, getItemTargetPath, getRegistryIndex, resolveComponentTree } from "@/src/utils/registry";
-import { TComponentRegistryIndex, TComponentRegistryIndexItem, TIndexItemFile, TRegistryIndexItemDirectory, TRegistryIndexItemFile, componentRegistryIndexItemSchema } from "@/src/utils/registry/schema";
+import { logger, handleError } from "@/src/helpers";
+import {
+  fetchComponentTree, fetchHelperTree, getItemTargetPath, getRegistryIndex, resolveComponentTree, resolveHelperTree
+} from "@/src/helpers/registry";
+import {
+  TComponentRegistryIndex, TComponentRegistryIndexItem, THelperRegistryIndex, THelperRegistryIndexItem,
+  TRegistryIndexItemDirectory, TRegistryIndexItemFile, componentRegistryIndexItemSchema
+} from "@/src/helpers/registry/schema";
 import {
   computePackageManagerAddCommand, computePackageManagerDevDependencyFlag
-} from "@/src/utils/packageManagerHelpers";
-import { getConfig } from "@/src/utils/config";
+} from "@/src/helpers/packageManagerHelpers";
+import { getConfig } from "@/src/helpers/config";
+import { AMINO_HELPER_FILE_MARKER_REGEX } from "../helpers/constants/cli";
 
 const addOptionsSchema = z.object({
   components: z.array(z.string()).optional(),
@@ -61,6 +67,7 @@ export const add = new Command()
       }
 
       const componentRegistryIndex = await getRegistryIndex({ registryType: "components" }) as TComponentRegistryIndex;
+      const helperRegistryIndex = await getRegistryIndex({ registryType: "helpers"}) as THelperRegistryIndex;
 
       let selectedComponents = (options.allComponents) ?
         componentRegistryIndex.map((entry: z.infer<typeof componentRegistryIndexItemSchema>) => entry.name) : options.components;
@@ -91,7 +98,7 @@ export const add = new Command()
       }
 
       const tree = await resolveComponentTree(componentRegistryIndex, selectedComponents);
-      const resolvedPayload = await fetchComponentTree(tree, { registryType: "components"});
+      const resolvedPayload = await fetchComponentTree(tree);
 
       if (!resolvedPayload?.length) {
         logger.warn("The components you selected could not be found.");
@@ -114,13 +121,13 @@ export const add = new Command()
       resolvedPayload.forEach(async (item: TComponentRegistryIndexItem) => {
         spinner.text = `Installing ${item.name}...`;
 
+        const targetPathType = (item.isIcon) ? "icons" : "components";
         const targetPath = await getItemTargetPath(
-          config, "components", options.path ? path.resolve(cwd, options.path) : undefined
+          config, targetPathType, options.path ? path.resolve(cwd, options.path) : undefined
         );
 
         if (!targetPath) return;
-
-        if (!existsSync(targetPath)) fs.mkdir(targetPath, { recursive: true });
+        if (!existsSync(targetPath)) await fs.mkdir(targetPath, { recursive: true });
 
         const componentExists = existsSync(path.resolve(targetPath, item.directory.name));
 
@@ -152,12 +159,11 @@ export const add = new Command()
           return;
         }
 
-        fs.mkdir(item.directory.name, { recursive: true });
+        await fs.mkdir(item.directory.name, { recursive: true });
 
         // - TODO: -> Recursively iterate through component's directory structure, installing all files
         //            and sub-directories in the correct structure at the properly resolved components
         //            directory path.
-
         item.directory.content.forEach(async (file: TRegistryIndexItemFile | TRegistryIndexItemDirectory) => {
           let filePath = path.resolve(targetPath, item.directory.name, file.name);
 
@@ -166,6 +172,32 @@ export const add = new Command()
           // await fs.writeFile(filePath, item.content);
         });
 
+        // -> Helpers
+        if (item.helperRegistryDependencies) {
+          const tree = await resolveHelperTree(helperRegistryIndex, item.helperRegistryDependencies);
+          const resolvedHelperPayload = await fetchHelperTree(tree);
+
+          resolvedHelperPayload?.forEach(async (helper: THelperRegistryIndexItem) => {
+            const targetPath = await getItemTargetPath(config, helper.type);
+
+            if (!targetPath) return;
+            if (!existsSync(targetPath)) await fs.mkdir(targetPath, { recursive: true });
+
+            const helperFilePath = path.join(targetPath, helper.file.name);
+            const fileExists = existsSync(path.join(targetPath, helperFilePath));
+
+            if (fileExists) {
+              const fileContents = await fs.readFile(helperFilePath, "utf-8");
+              if (!AMINO_HELPER_FILE_MARKER_REGEX.test(fileContents)) {
+                await fs.appendFile(helperFilePath, `\n ${helper.file.content}`)
+              }
+            }
+
+            else await fs.writeFile(helperFilePath, helper.file.content);
+          });
+        }
+
+        // -> Dependencies
         const packageManager = detectPackageManager();
         const packageManagerAddCommand = computePackageManagerAddCommand(packageManager);
         const packageManagerDevDependencyFlag = computePackageManagerDevDependencyFlag(packageManager);

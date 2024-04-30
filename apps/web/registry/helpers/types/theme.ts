@@ -1,5 +1,4 @@
-
-// amino-ui-helper-file
+// amino-ui-helper-file-marker
 
 import { AVAILABLE_THEMING_ORDERS } from "@src/constants/theme";
 

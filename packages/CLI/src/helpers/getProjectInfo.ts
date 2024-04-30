@@ -7,7 +7,7 @@ import { loadConfig } from "tsconfig-paths";
 import {
   DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_GLOBAL_CSS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH,
   DEFAULT_TEXT_CSS_PATH, DEFAULT_UTILS_PATH, getConfig, resolveConfigPaths
-} from "@/src/utils/config";
+} from "@/src/helpers/config";
 import type { TCoreConfig, TConfig } from "./config/schema";
 
 export const PROJECT_TYPE__NEXT_APP_SRC = "next-app-src";

@@ -5,12 +5,12 @@ import { Command } from "commander";
 import { diffLines, type Change } from "diff";
 import { z } from "zod";
 
-import { getRegistryIndex, getItemTargetPath, fetchTree } from "@/src/utils/registry";
-import { handleError, logger } from "@/src/utils";
-import { getConfig } from "@/src/utils/config";
-import type { TConfig } from "@/src/utils/config/schema";
-import { kebabToPascalCase } from "@/src/utils/stringUtils";
-import type { TRegistryIndexItem, TRegistryIndexItemFile, registryIndexSchema } from "../utils/registry/schema";
+import { getRegistryIndex, getItemTargetPath, fetchComponentTree } from "@/src/helpers/registry";
+import { handleError, logger } from "@/src/helpers";
+import { getConfig } from "@/src/helpers/config";
+import type { TConfig } from "@/src/helpers/config/schema";
+import { kebabToPascalCase } from "@/src/helpers/stringUtils";
+import type { TComponentRegistryIndexItem, componentRegistryIndexSchema } from "../helpers/registry/schema";
 
 const updateOptionsSchema = z.object({
   component: z.string().optional(),
@@ -47,13 +47,13 @@ export const diff = new Command()
         process.exit(1);
       }
 
-      const registryIndex = await getRegistryIndex();
+      const registryIndex = await getRegistryIndex({ registryType: "components" });
 
       // -> No component chosen for analysis.
       if (!options.component) {
         const targetPath = config.resolvedPaths.components;
 
-        const componentsInProject = registryIndex.filter((item: TRegistryIndexItem) => {
+        const componentsInProject = registryIndex.filter((item: TComponentRegistryIndexItem) => {
           for (const component of componentsInProject) {
             const filePath = path.resolve(targetPath, component.name);
             if (existsSync(filePath)) return true;
@@ -90,7 +90,7 @@ export const diff = new Command()
       }
 
       // -> Single component chosen for analysis.
-      const component = registryIndex.find((item: TRegistryIndexItem) => item.name === options.component);
+      const component = registryIndex.find((item: TComponentRegistryIndexItem) => item.name === options.component);
 
       if (!component) {
         logger.error(`The component ${chalk.green(options.component)} does not exist in the registry.`);
@@ -114,8 +114,8 @@ export const diff = new Command()
     }
   });
 
-const diffComponent = async (component: z.infer<typeof registryIndexSchema>[number], config: TConfig) => {
-  const payload = await fetchTree([component]);
+const diffComponent = async (component: z.infer<typeof componentRegistryIndexSchema>[number], config: TConfig) => {
+  const payload = await fetchComponentTree([component]);
   
   if (!payload) {
     console.error(`Error encountered while diffing component for changes.`);
@@ -125,7 +125,7 @@ const diffComponent = async (component: z.infer<typeof registryIndexSchema>[numb
   const changes = [];
 
   for (const item of payload) {
-    const targetPath = path.join(await getItemTargetPath(config), kebabToPascalCase(item.name));
+    const targetPath = path.join(await getItemTargetPath(config), item.directory);
     
     if (!targetPath) continue;
 

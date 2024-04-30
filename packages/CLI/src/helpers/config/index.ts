@@ -1,16 +1,8 @@
 import { loadConfig } from "tsconfig-paths";
 import { cosmiconfig } from "cosmiconfig";
-import { resolveImport } from "@/src/utils/resolveImport";
-import { type TConfig, coreConfigSchema, type TCoreConfig, configSchema } from "@/src/utils/config/schema";
-
-export const DEFAULT_COMPONENTS_PATH = "@/components";
-export const DEFAULT_ICONS_PATH = "@/components/icons";
-export const DEFAULT_UTILS_PATH = "@/utils";
-export const DEFAULT_TYPES_PATH = "@/types";
-export const DEFAULT_CONSTANTS_PATH = "@/constants";
-export const DEFAULT_GLOBAL_CSS_PATH = "@/";
-export const DEFAULT_TEXT_CSS_PATH = "@/";
-export const DEFAULT_COMPONENT_CONFIG_FILE = "amino-components.config.json";
+import { resolveImport } from "@/src/helpers/resolveImport";
+import { type TConfig, coreConfigSchema, type TCoreConfig, configSchema } from "@/src/helpers/config/schema";
+import { DEFAULT_COMPONENT_CONFIG_FILE } from "@/src/helpers/constants/cli";
 
 export const getConfig = async (cwd: string) => {
   const config = await getCoreConfig(cwd);
@@ -33,6 +25,7 @@ export const resolveConfigPaths = async (cwd: string, config: TCoreConfig): Prom
     ...config,
     resolvedPaths: {
       components: await resolveImport(config.aliases["components"], tsConfig),
+      icons: await resolveImport(`${config.aliases["components"]}/icons`, tsConfig),
       utils: await resolveImport(config.aliases["utils"], tsConfig),
       types: await resolveImport(config.aliases["types"], tsConfig),
       constants: await resolveImport(config.aliases["constants"], tsConfig),
@@ -45,7 +38,7 @@ export const resolveConfigPaths = async (cwd: string, config: TCoreConfig): Prom
 export const getCoreConfig = async (cwd: string): Promise<TCoreConfig | undefined> => {
   try {
     // - TODO: -> Consider supporting user-customized config file name and type.
-    const explorer = cosmiconfig("amino-components", { searchPlaces: [DEFAULT_COMPONENT_CONFIG_FILE] });
+    const explorer = cosmiconfig("amino-ui", { searchPlaces: [DEFAULT_COMPONENT_CONFIG_FILE] });
     const configResult = await explorer.search(cwd);
 
     if (!configResult) return undefined;

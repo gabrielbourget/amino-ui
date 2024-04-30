@@ -1,32 +1,30 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
   type TComponentRegistryIndex, type TComponentRegistryIndexItem, componentRegistryIndexSchema,
-  helperRegistryIndexItemSchema, helperRegistryIndexSchema, THelpersRegistryIndex, THelperRegistryIndexItem,
-  REGISTRY_TYPE__COMPONENTS, TAvailableRegistryItemTypes, REGISTRY_ITEM_TYPE__COMPONENT,
-  REGISTRY_ITEM_TYPE__UTIL, REGISTRY_ITEM_TYPE__TYPE, helpersRegistryIndexItemKeymap, REGISTRY_ITEM_TYPE__ICON,
-  REGISTRY_ITEM_TYPE__GLOBAL_CSS, REGISTRY_ITEM_TYPE__TEXT_CSS, TAvailableRegistryTypes, REGISTRY_TYPE__HELPERS,
-  REGISTRY_ITEM_TYPE__CONSTANT,
+  helperRegistryIndexSchema, THelperRegistryIndex, THelperRegistryIndexItem, REGISTRY_TYPE__COMPONENTS,
+  TAvailableRegistryItemTypes, REGISTRY_ITEM_TYPE__COMPONENT, REGISTRY_ITEM_TYPE__UTIL,
+  REGISTRY_ITEM_TYPE__TYPE, REGISTRY_ITEM_TYPE__ICON, REGISTRY_TYPE__HELPERS, REGISTRY_ITEM_TYPE__GLOBAL_CSS,
+  REGISTRY_ITEM_TYPE__TEXT_CSS, TAvailableRegistryTypes, REGISTRY_ITEM_TYPE__CONSTANT,
   
-} from "@/src/utils/registry/schema";
-import { TConfig } from "@/src/utils/config/schema";
+} from "@/src/helpers/registry/schema";
+import { TConfig } from "@/src/helpers/config/schema";
 
 const { COMPONENT_REGISTRY_URL, HTTPS_PROXY } = process.env;
 
-// - TODO: -> Replace default URL with actual hosted link once site is setup.
 const baseUrl = COMPONENT_REGISTRY_URL ?? "https://aminoui.com";
 const agent = HTTPS_PROXY ? new HttpsProxyAgent(HTTPS_PROXY) : undefined;
 
 export const getRegistryIndex = async (
   { registryType }: { registryType: TAvailableRegistryTypes }
-): Promise<TComponentRegistryIndex | THelpersRegistryIndex> => {
-  let registryIndex: TComponentRegistryIndex | THelpersRegistryIndex = [];
+): Promise<TComponentRegistryIndex | THelperRegistryIndex> => {
+  let registryIndex: TComponentRegistryIndex | THelperRegistryIndex = [];
   try {
     if (registryType === REGISTRY_TYPE__COMPONENTS) {
       const [result] = await fetchRegistry(["index.json"], { registryType: REGISTRY_TYPE__COMPONENTS });
       registryIndex = componentRegistryIndexSchema.parse(result);
     }
     else if (registryType === REGISTRY_TYPE__HELPERS) {
-      const [result] = await fetchRegistry(["helpers/index.json"], { registryType: REGISTRY_TYPE__HELPERS });
+      const [result] = await fetchRegistry(["index.json"], { registryType: REGISTRY_TYPE__HELPERS });
       registryIndex = helperRegistryIndexSchema.parse(result);
     }
 
@@ -104,10 +102,9 @@ export const resolveComponentTree = async (
 };
 
 export const resolveHelperTree = async (
-  index: THelpersRegistryIndex,
-  { registryType, itemsToResolve }: { registryType: TAvailableRegistryTypes, itemsToResolve: string[] }
-): Promise<THelpersRegistryIndex> => {
-  const tree: THelpersRegistryIndex = [];
+  index: THelperRegistryIndex, itemsToResolve: string[]
+): Promise<THelperRegistryIndex> => {
+  const tree: THelperRegistryIndex = [];
 
   for (const item of itemsToResolve) {
     const entry = index.find((entry: THelperRegistryIndexItem) => entry.name === item);
@@ -118,19 +115,17 @@ export const resolveHelperTree = async (
 
   // -> Filter out duplicates
   return tree.filter(
-    (entry: THelperRegistryIndexItem, index: number, self: THelpersRegistryIndex) =>
+    (entry: THelperRegistryIndexItem, index: number, self: THelperRegistryIndex) =>
       self.findIndex((e: THelperRegistryIndexItem) => e.name === entry.name) === index
   );
 };
 
 // - TODO: -> Somehow need to account for recursion through nested directory structures, and maintain that directory structure
 //            to recreate it on the user's machine who's using the CLI.
-export const fetchComponentTree = async (
-  tree: TComponentRegistryIndex, { registryType }: { registryType: TAvailableRegistryTypes }
-) => {
+export const fetchComponentTree = async (tree: TComponentRegistryIndex) => {
   try {
     const paths = tree.map((entry: TComponentRegistryIndexItem) => `${entry.name}.json`);
-    const result = await fetchRegistry(paths, { registryType });
+    const result = await fetchRegistry(paths, { registryType: "components" });
 
     return componentRegistryIndexSchema.parse(result);
   } catch (error) {
@@ -138,12 +133,10 @@ export const fetchComponentTree = async (
   }
 };
 
-export const fetchHelperTree = async (
-  tree: THelpersRegistryIndex, { registryType }: { registryType: TAvailableRegistryTypes }
-) => {
+export const fetchHelperTree = async (tree: THelperRegistryIndex): Promise<THelperRegistryIndex | undefined> => {
   try {
     const paths = tree.map((entry: THelperRegistryIndexItem) => `${entry.name}.json`);
-    const result = await fetchRegistry(paths, { registryType });
+    const result = await fetchRegistry(paths, { registryType: "helpers" });
 
     return helperRegistryIndexSchema.parse(result);
   } catch (error) {

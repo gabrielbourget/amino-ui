@@ -1,9 +1,5 @@
 import type { TComponentRegistry } from "./schema";
 
-// - TODO: -> Add to utils: TGenericItem
-
-const baseDependencies = ["react", "react-dom", "classnames"];
-
 export const components: TComponentRegistry = [
   // - TODO: -> Uncomment and double check details once component is implemented
   // {

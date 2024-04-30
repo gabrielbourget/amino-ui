@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import { tmpdir } from "os";
 import path from "path";
-import type { TConfig } from "@/src/utils/config/schema";
-import { transformImports } from "@/src/utils/transformers/transformImports";
-import { transformToJSX } from "@/src/utils/transformers/transformToJSX";
-import { transformNextJS } from "@/src/utils/transformers/transformNextJS";
+import type { TConfig } from "@/src/helpers/config/schema";
+import { transformImports } from "@/src/helpers/transformers/transformImports";
+import { transformToJSX } from "@/src/helpers/transformers/transformToJSX";
+import { transformNextJS } from "@/src/helpers/transformers/transformNextJS";
 import { Project, ScriptKind, type SourceFile } from "ts-morph";
 
 export type TTransformOptions = {

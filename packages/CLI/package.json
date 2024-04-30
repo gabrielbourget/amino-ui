@@ -1,5 +1,5 @@
 {
-  "name": "resource-distribution-cli",
+  "name": "amino-ui-cli",
   "description": "Distribute centralized resources into your codebase in a modular fashion.",
   "module": "index.ts",
   "type": "module",

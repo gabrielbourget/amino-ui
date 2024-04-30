@@ -1,4 +1,4 @@
-import { TTransform } from "@/src/utils/transformers";
+import { TTransform } from "@/src/helpers/transformers";
 
 export const transformImports: TTransform = async ({ sourceFile, config }) => {
   const importDeclarations = sourceFile.getImportDeclarations();
@@ -6,10 +6,9 @@ export const transformImports: TTransform = async ({ sourceFile, config }) => {
   for (const importDeclaration of importDeclarations) {
     const moduleSpecifier = importDeclaration.getModuleSpecifierValue();
 
-    // Replace @/registry/[style] with the components alias.
-    if (moduleSpecifier.startsWith("@/registry/")) {
+    if (moduleSpecifier.startsWith("@/registry/components")) {
       importDeclaration.setModuleSpecifier(
-        moduleSpecifier.replace(/^@\/registry\/[^/]+/, config.aliases.components)
+        moduleSpecifier.replace(/^@\/registry\/components\/[^/]+/, config.aliases.components)
       );
     }
 
@@ -30,13 +29,7 @@ export const transformImports: TTransform = async ({ sourceFile, config }) => {
         moduleSpecifier.replace(/^@\/constants/, config.aliases.constants)
       );
     }
-
-    if (moduleSpecifier === "@/icons") {
-      importDeclaration.setModuleSpecifier(
-        moduleSpecifier.replace(/^@\/icons/, config.aliases.icons)
-      );
-    }
   }
 
-  return sourceFile
-}
+  return sourceFile;
+};

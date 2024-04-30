@@ -6,12 +6,12 @@ export const coreConfigSchema = z.object({
   tsx: z.coerce.boolean().default(true),
   aliases: z.object({
     components: z.string(),
-    icons: z.string(),
     utils: z.string(),
     types: z.string(),
     constants: z.string(),
     globalCSS: z.string(),
-    textCSS: z.string()
+    textCSS: z.string(),
+    serverSideStyles: z.string(),
   }),
 }).strict();
 
@@ -25,7 +25,8 @@ export const configSchema = coreConfigSchema.extend({
     types: z.string(),
     constants: z.string(),
     globalCSS: z.string(),
-    textCSS: z.string()
+    textCSS: z.string(),
+    serverSideStyles: z.string(),
   })
 });
 

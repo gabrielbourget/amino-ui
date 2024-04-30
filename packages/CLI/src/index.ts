@@ -1,6 +1,6 @@
 import { Command } from "commander";
 // import figlet from "figlet";
-import { getPackageInfo } from "./utils/getPackageInfo";
+import { getPackageInfo } from "./helpers/getPackageInfo";
 import { diff } from "./commands/diff";
 import { add } from "./commands/add";
 import { init } from "./commands/init";

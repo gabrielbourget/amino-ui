@@ -1,5 +1,3 @@
-// - TODO: -> Figure out how to include default icons
-
 import { existsSync, promises as fs } from "fs";
 import { Command } from "commander";
 import path from "path";
@@ -7,19 +5,22 @@ import chalk from "chalk";
 import prompts from "prompts";
 import ora from "ora";
 import { z } from "zod";
+import { execa } from "execa";
 const { detect: detectPackageManager } = require("detect-package-manager");
 
-import { handleError } from "@/src/utils/handleError";
-import { logger } from "@/src/utils/logger";
-import { getProjectConfig } from "@/src/utils/getProjectInfo";
+import { handleError } from "@/src/helpers/handleError";
+import { logger } from "@/src/helpers/logger";
+import { getProjectConfig } from "@/src/helpers/getProjectInfo";
+import { getConfig, resolveConfigPaths } from "@/src/helpers/config";
+import { coreConfigSchema, type TConfig, type TCoreConfig } from "@/src/helpers/config/schema";
+import { computePackageManagerAddCommand, computePackageManagerDevDependencyFlag } from "../helpers/packageManagerHelpers";
+import { fetchHelperTree, getItemTargetPath, getRegistryIndex, resolveHelperTree } from "@/src/helpers/registry";
+import { THelperRegistryIndex } from "@/src/helpers/registry/schema";
 import {
-  DEFAULT_COMPONENTS_PATH, DEFAULT_CONSTANTS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH, getConfig,
-  resolveConfigPaths, DEFAULT_GLOBAL_CSS_PATH, DEFAULT_TEXT_CSS_PATH,
-  DEFAULT_COMPONENT_CONFIG_FILE
-} from "@/src/utils/config";
-import { coreConfigSchema, type TConfig, type TCoreConfig } from "../utils/config/schema";
-import { computePackageManagerAddCommand, computePackageManagerDevDependencyFlag } from "../utils/packageManagerHelpers";
-import { execa } from "execa";
+  AMINO_HELPER_FILE_MARKER_REGEX, DEFAULT_COMPONENT_CONFIG_FILE, DEFAULT_COMPONENTS_PATH,
+  DEFAULT_CONSTANTS_PATH, DEFAULT_ICONS_PATH, DEFAULT_TYPES_PATH, DEFAULT_UTILS_PATH,
+  DEFAULT_GLOBAL_CSS_PATH, DEFAULT_TEXT_CSS_PATH
+} from "@/src/helpers/constants/cli";
 
 // - TODO: -> Figure out what's in this list.
 const BASE_COMPONENT_LIBRARY_DEPENDENCIES = [
@@ -56,7 +57,7 @@ export const init = new Command()
 
       if (projectConfig) {
         // - TODO: -> Consider edge case where there is an existing config but you'd like to modify it through the command line interface.
-        logger.info(`${chalk.green("[ Existing Configuration Detected ]")}`);
+        logger.info(`${chalk.green("[ Existing Configuration Detected ]")} No further action required.`);
         return;
       }
       
@@ -120,14 +121,8 @@ export const promptForConfig = async (
     {
       type: "text",
       name: "constantsAlias",
-      message: `Please configure your preferred import alias for ${highlight("icons")}:`,
+      message: `Please configure your preferred import alias for ${highlight("constants")}:`,
       initial: defaultConfig?.aliases.constants ?? DEFAULT_CONSTANTS_PATH,
-    },
-    {
-      type: "text",
-      name: "iconsAlias",
-      message: `Please configure your preferred import alias for ${highlight("icons")}:`,
-      initial: defaultConfig?.aliases.icons ?? DEFAULT_ICONS_PATH,
     },
     {
       type: "text",
@@ -152,7 +147,6 @@ export const promptForConfig = async (
       utils: options.utilsAlias,
       types: options.typesAlias,
       constants: options.constantsAlias,
-      icons: options.iconsAlias,
       globalCSS: options.globalCSSAlias,
       textCSS: options.textCSSAlias,
     }
@@ -187,23 +181,35 @@ export const runInit = async (cwd: string, config: TConfig) => {
     if (!existsSync(dirName)) await fs.mkdir(dirName, { recursive: true });
   }
 
+  // - TODO: -> Use these
   const targetJSXTSXFileExtension = config.tsx ? "tsx" : "jsx";
   const targetJSTSFileExtension = config.tsx ? "ts" : "js";
 
   // - TODO: -> Run imports code transform before writing files to calibrate imports to config file
   //   aliases in the CLI user's preferences.
 
-  // -> Write  to util files
-  // - TODO: -> Handle existing files by appending to them.
-  // await fs.writeFile(
-  //   config.resolvedPaths.utils,
-  // )
+  const helperRegistryIndex = await getRegistryIndex({ registryType: "helpers"}) as THelperRegistryIndex;
+  const tree = await resolveHelperTree(helperRegistryIndex, ["utils/serverSideStyles"]);
+  const resolvedHelperPayload = await fetchHelperTree(tree);
 
-  // -> Write types file
-  // -> Write constants files
-  // -> Write utils files
-  // -> Write text CSS file
-  // -> Write global CSS file
+  const targetPath = await getItemTargetPath(config, "utils");
+  
+  if (!targetPath) return;
+  if (!existsSync(targetPath)) await fs.mkdir(targetPath, { recursive: true });
+
+  const helperFilePath = path.join(targetPath, resolvedHelperPayload![0].file.name);
+  const fileExists = existsSync(path.join(targetPath, helperFilePath));
+
+  if (fileExists) {
+    const fileContents = await fs.readFile(helperFilePath, "utf-8");
+    if (!AMINO_HELPER_FILE_MARKER_REGEX.test(fileContents)) {
+      await fs.appendFile(helperFilePath, `\n ${resolvedHelperPayload![0].file.content}`)
+    }
+  }
+
+  else await fs.writeFile(helperFilePath, resolvedHelperPayload![0].file.content);
+
+  spinner?.succeed();
 
   // -> Install base component library dependencies
   const packageManager = detectPackageManager();
